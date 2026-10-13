@@ -7,6 +7,8 @@ Time matched severity (Table S26),5,1,GB,"exploratory, not interpreted"
 Onset error (Table S21),5,1,LR,exploratory
 Dose reference (Table S13),10,2,"RF minus GB dose; RF+GB minus GB dose; fold MCC, Wilcoxon p < 0.05: LR minus LR dose",sensitivity
 Label threshold check (Table S16),4,0,none,sensitivity
+Per recording scoring (Table S16),10,0,none (intervals for the five means over groups only),sensitivity
+Validated threshold (Table S16),10,0,none,sensitivity
 Influence of single groups (Table S11),110,not applicable,no interval or test,descriptive
 Controls with the detectors' own learners (Table S8),18,not applicable,detection rates on synthetic signals,check of what the protocol detects
 Within game randomization test (Table S9),5,0,none,"exploratory, BH over the five detectors"

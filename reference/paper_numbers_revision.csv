@@ -69,3 +69,12 @@ v69,"Sec V-C threshold grid, rank of the primary rule",the 2nd most favorable of
 v70,Sec V-C clock alarm rate at threshold 0.7,0.089 of windows,f3(TG[(TG.model=='RF')&(TG.w==61)&((TG.tau-0.7).abs()<1e-9)].clock_alarm.iloc[0])+' of windows'
 v71,Sec V-C clock fold MCC at threshold 0.7,falls to 0.161,'falls to '+f3(TG[(TG.model=='RF')&(TG.w==61)&((TG.tau-0.7).abs()<1e-9)].clock.iloc[0])
 v72,"Table S9 note, rank of the MLP",MLP 28,'MLP '+str(int(TG[TG.model=='MLP'].rank_primary.iloc[0]))
+v73,Sec V-C threshold chosen on validation groups,+0.058 to +0.064,(lambda x: sg(x.min())+' to '+sg(x.max()))(TV[(TV.variant=='tau')&TV.model.isin(TR)].d)
+v74,Sec V-C and VI-A window and threshold chosen on validation groups,−0.008 to +0.022,(lambda x: sg(x.min())+' to '+sg(x.max()))(TV[(TV.variant=='w and tau')&TV.model.isin(TR)].d)
+v75,"Sec V-C per recording scoring, 26 recordings",−0.157 to −0.032,sg(RC.d_rec.min())+' to '+sg(RC.d_rec.max())
+v76,"Sec V-C per recording scoring, mean over groups",+0.031 to +0.047,"sg(RC.loc[TR,'d_grp'].min())+' to '+sg(RC.loc[TR,'d_grp'].max())"
+v77,"Sec V-E severity 3 windows missed, primary rule",413 to 421 of 821 against 328,"str(int(SVT.loc[TR,'missed_s3'].min()))+' to '+str(int(SVT.loc[TR,'missed_s3'].max()))+' of 821 against '+str(int(SVT.loc['Clock','missed_s3']))"
+v78,"Sec V-E severity 3 windows missed, matched alarm rate",279 to 330 against 267,"str(int(SVT.loc[TR,'missed_s3_m44'].min()))+' to '+str(int(SVT.loc[TR,'missed_s3_m44'].max()))+' against '+str(int(SVT.loc['Clock','missed_s3_m44']))"
+v79,Sec V-C LOGO models scored within recordings,0.195 to 0.320 against 0.352,f3(RC.mcc_rec.min())+' to '+f3(RC.mcc_rec.max())+' against '+f3(RC.clock_rec.iloc[0])
+v80,Sec V-C fold mean MCC under LORO,0.240 to 0.338 against 0.351,"f3(LOR.loc[DET,'mcc'].min())+' to '+f3(LOR.loc[DET,'mcc'].max())+' against '+f3(LOR.loc['Clock','mcc'])"
+v81,"Sec VI-A per recording, tree ensembles",−0.042 to −0.032,"sg(RC.loc[TR,'d_rec'].min())+' to '+sg(RC.loc[TR,'d_rec'].max())"

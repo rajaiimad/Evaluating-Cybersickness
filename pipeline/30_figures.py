@@ -53,15 +53,15 @@ def fold_mcc(g):
 if "1" in which:
     stages = [
         ("Public VR gameplay dataset", f"{int(DF['windows']):,} windows, {int(DF['recordings'])} recordings, four severity levels", "#f2f2f2", "#7f7f7f"),
-        ("Participant group and recording recovery", f"{int(DF['participant_groups'])} descriptor defined groups; archive start times checked", "#e3ecf7", "#2a78d6"),
-        ("Group disjoint evaluation", f"leave one participant group out: {int(DF['participant_groups'])} folds, {int(DF['groups_with_both_classes'])} with both classes", "#e3ecf7", "#2a78d6"),
+        ("Recovery of recordings and reconstructed groups", f"{int(DF['participant_groups'])} descriptor defined groups; archive start times checked", "#e3ecf7", "#2a78d6"),
+        ("Group disjoint evaluation", f"leave one reconstructed group out: {int(DF['participant_groups'])} folds, {int(DF['groups_with_both_classes'])} with both classes", "#e3ecf7", "#2a78d6"),
         ("Past only features, unit variables excluded", f"{int(DF['features_primary'])} features; participant descriptor indicators left out", "#e3ecf7", "#2a78d6"),
         ("Training only preprocessing", "robust scaling fitted on training groups; no oversampling", "#e3ecf7", "#2a78d6"),
         ("Five detectors and an elapsed time clock", "RF, GB, RF+GB, LR, MLP; the clock is the reference", "#eeecf6", "#4a3aa7"),
-        ("One prespecified operating rule", "trailing mean over w = 61 windows, threshold τ = 0.5, for all", "#eeecf6", "#4a3aa7"),
+        ("One fixed operating rule", "trailing mean over w = 61 windows, threshold τ = 0.5, for all", "#eeecf6", "#4a3aa7"),
         ("Comparison with elapsed time", "fold MCC against the clock; time matched AUC scored with LPGO models", "#e6f3ea", "#008300"),
         ("Safety and deployment endpoints", "false alarms in all groups; severity at a matched alarm rate; prevalence", "#e6f3ea", "#008300"),
-        ("Controls and sensitivity", "synthetic signals, time only models; 99 features, LORO, nested w", "#fcebe4", "#eb6834"),
+        ("Controls and sensitivity", "synthetic signals, time only models, randomization; LORO, validated rule", "#fcebe4", "#eb6834"),
     ]
     fig, ax = plt.subplots(figsize=(4.6, 6.2)); ax.set_xlim(0, 10); ax.set_ylim(0, 10); ax.axis("off")
     n = len(stages); top = 9.6; step = 9.2 / (n - 1); h = 0.74; ys = []

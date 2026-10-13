@@ -424,6 +424,26 @@
 | Seed 2 | RF | 0.442 | 0.365 | +0.078 |  | 16 groups |
 | Seed 2 | RF+GB | 0.457 | 0.365 | +0.092 |  | 16 groups |
 | Seed 2 | MLP | 0.304 | 0.365 | −0.061 |  | 16 groups |
+| Per recording scoring, mean over recordings | RF | 0.310 | 0.352 | −0.042 | 0.587 | 26 recordings |
+| Per recording scoring, mean over recordings | GB | 0.320 | 0.352 | −0.032 | 0.627 | 26 recordings |
+| Per recording scoring, mean over recordings | RF+GB | 0.320 | 0.352 | −0.032 | 0.607 | 26 recordings |
+| Per recording scoring, mean over recordings | LR | 0.195 | 0.352 | −0.157 | 0.153 | 26 recordings |
+| Per recording scoring, mean over recordings | MLP | 0.304 | 0.352 | −0.048 | 0.424 | 26 recordings |
+| Per recording scoring, mean over groups | RF |  |  | +0.031 [−0.090, 0.153] | 0.900 | 16 groups |
+| Per recording scoring, mean over groups | GB |  |  | +0.045 [−0.091, 0.181] | 0.821 | 16 groups |
+| Per recording scoring, mean over groups | RF+GB |  |  | +0.047 [−0.089, 0.184] | 0.821 | 16 groups |
+| Per recording scoring, mean over groups | LR |  |  | −0.182 [−0.379, 0.015] | 0.065 | 16 groups |
+| Per recording scoring, mean over groups | MLP |  |  | −0.060 [−0.157, 0.037] | 0.375 | 16 groups |
+| Threshold chosen on validation groups | RF | 0.418 | 0.357 | +0.061 [−0.066, 0.188] | 0.211 | 16 groups |
+| Threshold chosen on validation groups | GB | 0.421 | 0.357 | +0.064 [−0.102, 0.230] | 0.464 | 16 groups |
+| Threshold chosen on validation groups | RF+GB | 0.415 | 0.357 | +0.058 [−0.119, 0.234] | 0.495 | 16 groups |
+| Threshold chosen on validation groups | LR | 0.337 | 0.357 | −0.020 [−0.132, 0.093] | 0.860 | 16 groups |
+| Threshold chosen on validation groups | MLP | 0.357 | 0.357 | 0.000 [−0.140, 0.139] | 0.860 | 16 groups |
+| Window and threshold chosen on validation groups | RF | 0.410 | 0.388 | +0.022 [−0.110, 0.154] | 0.433 | 16 groups |
+| Window and threshold chosen on validation groups | GB | 0.380 | 0.388 | −0.008 [−0.179, 0.163] | 1.000 | 16 groups |
+| Window and threshold chosen on validation groups | RF+GB | 0.398 | 0.388 | +0.010 [−0.165, 0.185] | 0.632 | 16 groups |
+| Window and threshold chosen on validation groups | LR | 0.264 | 0.388 | −0.124 [−0.257, 0.009] | 0.083 | 16 groups |
+| Window and threshold chosen on validation groups | MLP | 0.346 | 0.388 | −0.042 [−0.208, 0.124] | 0.464 | 16 groups |
 
 ## Table S11
 
@@ -492,6 +512,8 @@
 | Onset error (Table S21) | 5 | 1 | LR | exploratory |
 | Dose reference (Table S13) | 10 | 2 | RF minus GB dose; RF+GB minus GB dose; fold MCC, Wilcoxon p < 0.05: LR minus LR dose | sensitivity |
 | Label threshold check (Table S16) | 4 | 0 | none | sensitivity |
+| Per recording scoring (Table S16) | 10 | 0 | none (intervals for the five means over groups only) | sensitivity |
+| Validated threshold (Table S16) | 10 | 0 | none | sensitivity |
 | Influence of single groups (Table S11) | 110 | not applicable | no interval or test | descriptive |
 | Controls with the detectors' own learners (Table S8) | 18 | not applicable | detection rates on synthetic signals | check of what the protocol detects |
 | Within game randomization test (Table S9) | 5 | 0 | none | exploratory, BH over the five detectors |

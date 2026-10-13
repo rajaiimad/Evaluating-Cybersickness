@@ -262,8 +262,18 @@ def si_tables():
               s3(NWT.loc[m, "mcc"] - NWT.loc["Clock", "mcc"]), "", f"{int(NWT.loc[m, 'n'])} groups"] for m in SUP]
     rows += [[f"Seed {int(r.seed)}", r.model, f3(r.mcc), f3(PRI.loc["Clock", "mcc"]), s3(r.mcc - PRI.loc["Clock", "mcc"]), "", "16 groups"]
              for r in SDS[SDS.seed != 42].itertuples() if r.model != "GB"]
+    RC = pd.read_csv(TAB / "T_rev_recording.csv").set_index("model"); TV = pd.read_csv(TAB / "T_rev_tau_val.csv")
+    rows += [["Per recording scoring, mean over recordings", m, f3(r.mcc_rec), f3(r.clock_rec), s3(r.d_rec), f"{r.p_w_rec:.3f}",
+              f"{int(r.recordings)} recordings"] for m, r in RC.iterrows()]
+    rows += [["Per recording scoring, mean over groups", m, "", "", s3(r.d_grp) + " " + ci(r.lo, r.hi), f"{r.p_w:.3f}",
+              f"{int(r.groups)} groups"] for m, r in RC.iterrows()]
+    for v, lab in (("tau", "Threshold chosen on validation groups"), ("w and tau", "Window and threshold chosen on validation groups")):
+        tv = TV[TV.variant == v].set_index("model")
+        rows += [[lab, m, f3(tv.loc[m, "mcc"]), f3(tv.loc["Clock", "mcc"]), s3(tv.loc[m, "d"]) + " " + ci(tv.loc[m, "lo"], tv.loc[m, "hi"]),
+                  f"{tv.loc[m, 'p_w']:.3f}", f"{int(tv.loc[m, 'n'])} groups"] for m in SUP]
+    tvt = TV[TV.variant == "tau"].set_index("model"); tvw = TV[TV.variant == "w and tau"].set_index("model")
     l2 = L2.iloc[0]
-    _add("TABLE S22", "Label threshold check, label persistence rules, merged grouping, validated smoothing window and seeds: fold mean MCC",
+    _add("TABLE S22", "Label threshold check, label persistence rules, merged grouping, validated smoothing window, seeds, per recording scoring and validated threshold: MCC",
          ["Analysis", "Model", "Fold mean MCC", "Reference", "Difference [95% CI]", "Wilcoxon p", "Two class units"], rows,
          f"Label at severity 2 or more: detectors and the clock refitted under LOGO on the binary label s ≥ 2 ({int(l2.episodes)} "
          f"positive episodes in {int(l2.recordings)} recordings); reference: the clock on this label; paired t interval and "
@@ -275,7 +285,20 @@ def si_tables():
          "merge changes each fold mean. Smoothing window chosen on validation groups: the window is chosen in each fold on "
          "three validation groups; reference: the clock with its own chosen window. Seed 1 and seed 2: the stochastic "
          "detectors refitted (GB gives the same predictions at every seed); reference: the clock. Tests of these rows "
-         "against the clock are in Table S1.",
+         "against the clock are in Table S1. Per recording scoring: the MCC of the primary rule within each of the "
+         f"{int(RC.recordings.iloc[0])} recordings with both classes, from the primary LOGO predictions (the models are unchanged; only the "
+         "scoring unit changes); reference: the clock scored in the same way. Mean over recordings: Wilcoxon test over "
+         "the recordings, which are not independent within a group. Mean over groups: the recording differences are "
+         "averaged within each group first; paired t interval and Wilcoxon test over the groups (smallest p adjusted "
+         f"over the five detectors {RC.p_w_bh.min():.3f}). Threshold chosen on validation groups: in each fold the threshold is chosen from "
+         "0.3, 0.4, 0.5, 0.6 and 0.7 by the pooled MCC on the three validation groups, which are scored by models refitted on "
+         "the other 18 training groups, so that the held out group affects neither these models nor the choice; the "
+         "window is fixed at 61 or chosen jointly with the threshold from the six values of Table S9. The chosen rule is "
+         "applied to the held out group; every model and the "
+         "clock get their own chosen rule; reference: the clock with its own chosen rule (pooled alarm rate "
+         f"{tvt.loc['Clock', 'alarm']:.3f} and {tvw.loc['Clock', 'alarm']:.3f}; its chosen threshold is 0.3 in the median fold). Paired t interval and Wilcoxon "
+         f"test over the 16 folds; smallest p adjusted over the five detectors {tvt.p_w_bh.min():.3f} and {tvw.p_w_bh.min():.3f}. Both analyses were "
+         "added after the primary analysis from saved predictions; no model was refitted, and the primary rule is unchanged.",
          widths=[2400, 2300, 1000, 900, 1700, 900, 1100])
 
     # S23 influence of single groups on the time matched advantage (step 61)
@@ -362,6 +385,11 @@ def si_tables():
     lowp = [r.contrast for r in DC.itertuples() if r.p_w < 0.05]
     if lowp: inv[-1][3] += "; fold MCC, Wilcoxon p < 0.05: " + ", ".join(lowp)
     fam("Label threshold check (Table S22)", [(m, L2.loc[m, "lo"], L2.loc[m, "hi"]) for m in L2.index], "sensitivity")
+    RC_ = pd.read_csv(TAB / "T_rev_recording.csv"); TV_ = pd.read_csv(TAB / "T_rev_tau_val.csv").dropna(subset=["lo"])
+    exr = [r.model for r in RC_.itertuples() if r.lo > 0 or r.hi < 0]
+    inv.append(["Per recording scoring (Table S22)", str(2 * len(RC_)), str(len(exr)),
+                ("; ".join(exr) if exr else "none") + " (intervals for the five means over groups only)", "sensitivity"])
+    fam("Validated threshold (Table S22)", [(f"{r.model} {r.variant}", r.lo, r.hi) for r in TV_.itertuples()], "sensitivity")
     inv.append(["Influence of single groups (Table S23)", str(len(SUP) * len(one)), "not applicable", "no interval or test", "descriptive"])
     inv.append(["Controls with the detectors' own learners (Table S13)", str(len(C)), "not applicable",
                 "detection rates on synthetic signals", "check of what the protocol detects"])

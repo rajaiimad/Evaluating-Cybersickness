@@ -22,7 +22,7 @@ FAST = [("01_dataset_facts.py", []), ("02_archive_linkage.py", []),
         ("24_primary_statistics.py", []), ("25_lpgo_statistics.py", []), ("26_secondary_tests.py", []),
         ("51_rev_power.py", []), ("52_rev_tm_parts.py", []), ("54_rev_scenario_stats.py", []),
         ("55_rev_controls.py", ["summary"]), ("56_rev_severity.py", []), ("58_rev_perm_null.py", ["summary"]),
-        ("59_rev_perm_strat.py", ["summary"]), ("60_rev_onset_dose.py", []), ("61_rev_influence.py", []), ("62_rev_tau_grid.py", []),
+        ("59_rev_perm_strat.py", ["summary"]), ("60_rev_onset_dose.py", []), ("61_rev_influence.py", []), ("62_rev_tau_grid.py", []), ("63_rev_recording_tau.py", []),
         ("30_figures.py", []), ("31_paper_tables.py", []), ("40_verify.py", [])]
 FULL = [("00_get_data.py", []), ("01_dataset_facts.py", []), ("02_archive_linkage.py", []),
         ("10_fit_initial99.py", []), ("11_fit_designs.py", []), ("12_fit_seeds.py", []), ("13_fit_nested.py", []),
@@ -31,7 +31,7 @@ FULL = [("00_get_data.py", []), ("01_dataset_facts.py", []), ("02_archive_linkag
         ("24_primary_statistics.py", []), ("25_lpgo_statistics.py", []), ("26_secondary_tests.py", []),
         ("51_rev_power.py", []), ("52_rev_tm_parts.py", []), ("53_rev_fit_scenario.py", []),
         ("54_rev_scenario_stats.py", []), ("55_rev_controls.py", []), ("56_rev_severity.py", []),
-        ("58_rev_perm_null.py", []), ("59_rev_perm_strat.py", []), ("60_rev_onset_dose.py", []), ("61_rev_influence.py", []), ("62_rev_tau_grid.py", []),
+        ("58_rev_perm_null.py", []), ("59_rev_perm_strat.py", []), ("60_rev_onset_dose.py", []), ("61_rev_influence.py", []), ("62_rev_tau_grid.py", []), ("63_rev_recording_tau.py", []),
         ("30_figures.py", []), ("31_paper_tables.py", []), ("40_verify.py", [])]
 
 ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)

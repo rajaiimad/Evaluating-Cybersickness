@@ -61,7 +61,7 @@ The results were produced in two software environments, and this cannot be undon
 
 | | Primary run | Revision run |
 |---|---|---|
-| Steps | 00 to 31, 40 | 50 to 62 |
+| Steps | 00 to 31, 40 | 50 to 63 |
 | Python | 3.11.15 | 3.13.0 |
 | scikit-learn / numpy / pandas / scipy | 1.8.0 / 2.4.4 / 3.0.2 / 1.17.1 | 1.6.0 / 2.2.1 / 2.2.3 / 1.15.0 |
 | File | `requirements.txt` | `requirements-revision.txt` |
@@ -105,7 +105,7 @@ python run_all.py
 ```
 
 It runs steps 01, 02, 12, 13, 16 (summary), 20 to 26, 51, 52, 54, 55 (summary), 56, 58 (summary), 59 (summary), 60,
-61, 62, 30, 31 and 40. No model is fitted: steps that fit models find their prediction or replicate files and only
+61, 62, 63, 30, 31 and 40. No model is fitted: steps that fit models find their prediction or replicate files and only
 score them. The run ends with `ALL CHECKS PASSED` when
 
 1. every result table equals its frozen copy in `reference/tables` (tolerance 1e-9),
@@ -208,7 +208,7 @@ table below uses the printed numbers of the final documents. All files are under
 | Table S13 | Dose reference | 60 | `T_rev_dose.csv`, `T_rev_dose_contrast.csv` |
 | Table S14 | Other bins and held out units | 52 | `T_rev_tm_bins.csv`, `T_rev_tm_units.csv` |
 | Table S15 | 99 features; recording holdout | 10, 11, 14 (fits); 20 | `T_original99.csv`, `T_full99_mlp.csv`, `T_loro.csv` |
-| Table S16 | Label at severity 2 or more; persistence rules; merged grouping; validated window; seeds | 60, 23, 20, 13, 12 | `T_rev_label2.csv`, `T_constants.csv`, `T_merged.csv`, `T_nested_w.csv`, `T_sup_seeds.csv` |
+| Table S16 | Label at severity 2 or more; persistence rules; merged grouping; validated window; seeds; per recording scoring; threshold chosen on validation groups | 60, 23, 20, 13, 12, 63 | `T_rev_label2.csv`, `T_constants.csv`, `T_merged.csv`, `T_nested_w.csv`, `T_sup_seeds.csv`, `T_rev_recording.csv`, `T_rev_tau_val.csv` |
 | Table S17 | Time only models (negative controls on the real data) | 25 | `T_lpgo_atime.csv` |
 | Table S18 | Further quantities of the controls | 16 | `T_controls.csv` |
 | Table S19 | Detection rates of the trait control with intervals | 61 | `T_rev_control_ci.csv` |
@@ -243,7 +243,7 @@ that setting (`docs/AUDIT.md`, section 3).
 The model fitting code of the primary run (`src/csp/data.py`, `design.py`, `metrics.py`, `metrics_extra.py`,
 `inference.py`, `paths.py` and steps 00 to 26) is identical to the release of the first submission (the first commit
 of this repository, `2dbc62d`). The 233 primary prediction files match the checksums recorded at that release
-(`reference/predictions_sha256.txt`). Steps 50 to 62, `src/csp/revision.py` and `si_revision.py` were added in
+(`reference/predictions_sha256.txt`). Steps 50 to 63, `src/csp/revision.py` and `si_revision.py` were added in
 revision.
 
 Three small changes were made to existing files when the reproducibility audit was prepared. None of them computes a

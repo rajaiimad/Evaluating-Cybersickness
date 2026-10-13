@@ -78,7 +78,8 @@ NS.update(PS=T("T_rev_perm_strat", "learner"), ON=T("T_rev_onset"), OP=T("T_rev_
           DC=T("T_rev_dose_contrast", "contrast"), L2=T("T_rev_label2"), TC=T("T_controls", None), LPA=T("T_lpgo_atime"),
           INF=pd.read_csv(TABLES / "T_rev_influence.csv", dtype={"group": str}).set_index("group"),
           CCI=T("T_rev_control_ci", "delta"), PR=T("T_primary"), O99=T("T_original99"),
-          JSE=T("T_rev_influence_se"), TG=T("T_rev_tau_grid", None))
+          JSE=T("T_rev_influence_se"), TG=T("T_rev_tau_grid", None), RC=T("T_rev_recording"), TV=T("T_rev_tau_val", None),
+          SVT=T("T_severity"), TR=["RF", "GB", "RF+GB"], LOR=T("T_loro"))
 ok_n, bad = 0, []
 ROWS = list(csv.DictReader(open(REFERENCE / "paper_numbers_revision.csv", encoding="utf-8")))
 if FILL:                                    # write the printed form of every expression (run once after a rebuild)
