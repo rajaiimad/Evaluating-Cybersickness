@@ -1,0 +1,12 @@
+# Environment of the analyses added in revision (steps 50 to 62) and of the document checks (Python 3.13.0, CPU only).
+# The primary model fits (steps 10 to 16) were run with requirements.txt (Python 3.11.15); see README.md, "Two environments".
+numpy==2.2.1
+pandas==2.2.3
+scipy==1.15.0
+scikit-learn==1.6.0
+joblib==1.4.2
+threadpoolctl==3.5.0
+matplotlib==3.10.0
+# only for tools/extract_paper_tables.py, pipeline/57_rev_verify.py and tools/revision/ (they read the Word files)
+python-docx==1.2.0
+lxml==6.1.3

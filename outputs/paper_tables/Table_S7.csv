@@ -1,13 +1,13 @@
-Signal,δ,Replicates,"Detected, MCC Wilcoxon","Detected, MCC t test",Mean Δ fold AUC,Mean Atime pooled,Mean Atime LPGO,"Below reference, pooled","Below reference, LPGO"
-state,0,200,1.0%,0.5%,−0.000,0.444,0.528,100%,5.0%
-state,0.05,200,3.0%,3.5%,−0.000,0.451,0.535,100%,0%
-state,0.1,200,18%,16%,−0.001,0.470,0.554,95%,0%
-state,0.15,200,39%,36%,−0.000,0.502,0.584,32%,0%
-state,0.2,200,61%,57%,−0.000,0.543,0.622,1.0%,0%
-state,0.3,200,90%,89%,+0.003,0.651,0.718,0%,0%
-trait,0,200,0%,0%,−0.005,0.452,0.511,36%,30%
-trait,0.5,200,0%,0%,−0.003,0.481,0.537,28%,26%
-trait,1,200,1.5%,0.5%,−0.001,0.543,0.591,15%,13%
-trait,1.5,200,1.0%,1.0%,+0.007,0.620,0.658,3.0%,2.5%
-trait,2,200,0.5%,0.5%,+0.010,0.661,0.692,0.5%,0.5%
-trait,3,200,0%,0%,+0.018,0.683,0.708,0%,0%
+Family,Estimates,Excluding zero (or BH p < 0.05),Which,Role
+"Detector minus clock, fold MCC (Table S10)",5,0,none,interval of the primary comparison
+Parts of Atime (Table S4),21,1,"GB time only, within",descriptive
+Learner matched contrasts (Table S4),2,1,RF minus RF on elapsed time only,exploratory
+Scenario check (Table S12),22,2,RF+GB with minus without scenario; RF minus LR time and scenario,sensitivity
+Time matched severity (Table S26),5,1,GB,"exploratory, not interpreted"
+Onset error (Table S21),5,1,LR,exploratory
+Dose reference (Table S13),10,2,"RF minus GB dose; RF+GB minus GB dose; fold MCC, Wilcoxon p < 0.05: LR minus LR dose",sensitivity
+Label threshold check (Table S16),4,0,none,sensitivity
+Influence of single groups (Table S11),110,not applicable,no interval or test,descriptive
+Controls with the detectors' own learners (Table S8),18,not applicable,detection rates on synthetic signals,check of what the protocol detects
+Within game randomization test (Table S9),5,0,none,"exploratory, BH over the five detectors"
+Parts of the randomization test (Table S9),10,2,"unadjusted p < 0.05: RF between, RF+GB between","descriptive, unadjusted"

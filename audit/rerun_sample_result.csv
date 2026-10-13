@@ -1,0 +1,21 @@
+step,args,learner,columns,max_abs_diff,seconds,status
+59_rev_perm_strat.py,"['trees', -1]",RF,6,5.551115123125783e-17,4888,identical to 1e-9
+59_rev_perm_strat.py,"['trees', -1]",GB,6,6.938893903907228e-17,4888,identical to 1e-9
+59_rev_perm_strat.py,"['trees', -1]",RF+GB,6,9.020562075079397e-17,4888,identical to 1e-9
+59_rev_perm_strat.py,"['trees', 0]",RF,6,6.938893903907228e-17,4819,identical to 1e-9
+59_rev_perm_strat.py,"['trees', 0]",GB,6,8.326672684688674e-17,4819,identical to 1e-9
+59_rev_perm_strat.py,"['trees', 0]",RF+GB,6,6.938893903907228e-17,4819,identical to 1e-9
+59_rev_perm_strat.py,"['LR', -1]",LR,6,6.938893903907228e-17,372,identical to 1e-9
+59_rev_perm_strat.py,"['LR', 0]",LR,6,9.71445146547012e-17,442,identical to 1e-9
+59_rev_perm_strat.py,"['MLP', -1]",MLP,6,8.673617379884035e-17,941,identical to 1e-9
+59_rev_perm_strat.py,"['MLP', 0]",MLP,6,7.632783294297951e-17,936,identical to 1e-9
+58_rev_perm_null.py,"['GB', 0]",GB,6,7.632783294297951e-17,1690,identical to 1e-9
+58_rev_perm_null.py,"['RF', 0]",RF,6,9.71445146547012e-17,3885,identical to 1e-9
+55_rev_controls.py,"['LR', 'trait', 0.0, 0]",LR,15,9.71445146547012e-17,18,identical to 1e-9
+55_rev_controls.py,"['LR', 'state_ar', 0.5, 3]",LR,15,9.71445146547012e-17,12,identical to 1e-9
+55_rev_controls.py,"['GB', 'trait', 2.0, 1]",GB,15,7.632783294297951e-17,369,identical to 1e-9
+55_rev_controls.py,"['GB', 'state_ar', 0.0, 7]",GB,15,8.847089727481716e-17,356,identical to 1e-9
+55_rev_controls.py,"['RF', 'trait', 0.0, 2]",RF,15,9.71445146547012e-17,833,identical to 1e-9
+16_controls.py,"['state', 0.1, 0]",LR,13,8.673617379884035e-17,6,identical to 1e-9
+16_controls.py,"['trait', 1.5, 5]",LR,13,8.326672684688674e-17,34,identical to 1e-9
+16_controls.py,"['trait', 0.0, 199]",LR,13,8.326672684688674e-17,32,identical to 1e-9

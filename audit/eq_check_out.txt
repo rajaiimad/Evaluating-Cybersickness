@@ -1,0 +1,28 @@
+severity values present: [np.int64(0), np.int64(1), np.int64(2), np.int64(3)]
+(1) positives 4147 | windows 9390
+(2) trailing mean: largest relative difference from the code 5.2e-08
+(3) trailing sd:   largest relative difference from the code 5.3e-08
+(4) difference:    largest relative difference from the code 5.6e-08   (features are stored in single precision, about 1e-7)
+    field of view features dropped from the primary set: ['CameraFieldOfView_sd30', 'CameraFieldOfView_sd120', 'CameraFieldOfView_sd300', 'CameraFieldOfView_diff'] | values per recording: 1 | distinct values: 2
+    primary features: 76 | full: 99
+(5) scaling: largest difference from RobustScaler 0.0e+00 | features with zero training IQR in this fold: 2
+(8)-(11) RF     fold MCC 0.447598 (code 0.447598) | BA 0.747513 (code 0.747513) | (7) episode recall 19/31 = 0.612903 (code 0.612903)
+(8)-(11) GB     fold MCC 0.461202 (code 0.461202) | BA 0.758324 (code 0.758324) | (7) episode recall 17/31 = 0.548387 (code 0.548387)
+(8)-(11) RF+GB  fold MCC 0.462042 (code 0.462042) | BA 0.758875 (code 0.758875) | (7) episode recall 17/31 = 0.548387 (code 0.548387)
+(8)-(11) LR     fold MCC 0.197392 (code 0.197392) | BA 0.627943 (code 0.627943) | (7) episode recall 21/31 = 0.677419 (code 0.677419)
+(8)-(11) MLP    fold MCC 0.288490 (code 0.288490) | BA 0.657855 (code 0.657855) | (7) episode recall 24/31 = 0.774194 (code 0.774194)
+(8)-(11) Clock  fold MCC 0.364646 (code 0.364646) | BA 0.710263 (code 0.710263) | (7) episode recall 24/31 = 0.774194 (code 0.774194)
+(12) bins kept 10 | windows in kept bins 9334 | pairs 1825921 | between groups 95.4%
+(12) elapsed time 0.529724 (code 0.529724)
+(12) RF     pooled 0.639786 (code 0.639786) | (13) LPGO 0.652797 (code 0.652797)
+(12) GB     pooled 0.618166 (code 0.618166) | (13) LPGO 0.621122 (code 0.621122)
+(12) RF+GB  pooled 0.634798 (code 0.634798) | (13) LPGO 0.639574 (code 0.639574)
+(12) LR     pooled 0.516726 (code 0.516726) | (13) LPGO 0.534594 (code 0.534594)
+(12) MLP    pooled 0.537819 (code 0.537819) | (13) LPGO 0.585347 (code 0.585347)
+(S1) first bootstrap draw: concatenated resample 0.527691876 | closed form 0.527691876
+(S2)-(S4) RF pi=0.44: PPV 0.6596 (0.6596) NPV 0.6718 (0.6718) FA 114.8 (114.8)
+(S2)-(S4) RF pi=0.1: PPV 0.2151 (0.2151) NPV 0.9354 (0.9354) FA 184.5 (184.5)
+(S2)-(S4) RF pi=0.01: PPV 0.0243 (0.0243) NPV 0.9938 (0.9938) FA 203.0 (203.0)
+(S5) RF     A_sev 0.779351 (code 0.779351) | pairs 93959
+(S5) LR     A_sev 0.852212 (code 0.852212) | pairs 93959
+(S5) Clock  A_sev 0.701529 (code 0.701529) | pairs 93959

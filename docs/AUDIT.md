@@ -107,3 +107,14 @@ wrong. Text and layout:
 | P4 | Section V, second paragraph; Section IV-B; leakage figure caption | missing spaces: "(Section V-A).No detector", "w=61and", "w=61corresponds", "for the RF.(a)" | insert spaces (check the inline equations in Section IV-B after typesetting) |
 | P5 | Code availability | the manuscript cites `https://github.com/rajaiimad/cybersickness-safety`; the repository is now `https://github.com/rajaiimad/cybersickness-safety-protocol` and must be public at submission | update the link in the Code availability statement, make the repository public, and archive it (Zenodo) for a DOI |
 | P6 | Conclusion and Section VI | "nearly doubled" and "doubled" for the same quantity (LR alarm rate on never sick groups, 0.342 → 0.677, ratio 1.98) | use one wording |
+
+## 6. Revision R1 (October 2026)
+
+* Every item of sections 4 (A1 to A11) and 5 (P1 to P6) is applied in the revised manuscript (`tools/revision/`).
+* New finding R2: the minimum detectable difference and the groups needed of step 24 used the plain variance of the fold
+  differences, while the corrected test inflates it by 1.91. Step 51 reports both; the shipped values are unchanged and
+  are now labelled as the plain basis.
+* New finding R3: the Code availability URL of the first submission (`.../cybersickness-safety`) returned HTTP 404 on
+  8 October 2026; the revised manuscript cites `.../cybersickness-safety-protocol`.
+* Step 57 checks the revised .docx files against the code (quoted numbers, figure and reference numbering, removed
+  wording).

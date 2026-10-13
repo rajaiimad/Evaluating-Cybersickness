@@ -1,0 +1,4 @@
+id,reason
+l11,value read from the leakage figure (Fig. 2); it is not quoted in the text of either version
+h08,"conditional on the estimated improvement, not a power; replaced by the detection rate at the true signal strength whose mean improvement matches the RF (Table VI, delta = 1.5)"
+h10,"conditional on the estimated improvement, not a power; replaced by the detection rate at the true signal strength whose mean improvement matches the RF (Table VI, delta = 1.5)"

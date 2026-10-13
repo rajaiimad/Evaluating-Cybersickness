@@ -89,3 +89,21 @@ implemented. Line numbers refer to this release.
 | 200 replicates per δ; seeds `[2026, kind, round(1000 δ), rep]` | `16_controls.py`, `one`, `run_grid` |
 | Detection rules (paired t p < 0.05 with positive difference; lower 95% limit > 0) and calibrated threshold (97.5th percentile of the null) | `16_controls.py`, `summarise_controls` |
 | Time only negative controls (clock, RF and GB on elapsed time) | `15_fit_lpgo.py` (`RF time only`, `GB time only`), `24`, `25` |
+
+## Revision R1
+
+| Paper | Code |
+|---|---|
+| Within and between group parts of A_time (Section III-F) | `csp.revision.ATimeParts`, `52_rev_tm_parts.py` |
+| Scenario information: 66 features without condition and field of view; time and scenario reference | `53_rev_fit_scenario.py` (`F66`, `SCEN`), `54_rev_scenario_stats.py` |
+| Learner matched contrast (RF minus RF on elapsed time only) | `52_rev_tm_parts.py` |
+| Controls with the RF and GB learners; AR(1) state signal (φ = 0.9); seeds `[2027, signal, round(1000 δ), rep]` | `55_rev_controls.py` (`ar1_noise`, `one`, `summarise`) |
+| MDD and groups needed with the corrected variance; ΔMCC intervals | `51_rev_power.py` |
+| Severity ranking matched on elapsed time | `56_rev_severity.py` |
+| All feature permutation variant: 76 feature trajectories permuted between recordings, RF and GB refitted; seeds `[2028, rep]` | `58_rev_perm_null.py` (`permuted`, `one`, `summarise`) |
+| Within game permutation test (Section IV-C): 66 telemetry trajectories permuted within game, time and scenario kept, five detectors refitted, sequential Monte Carlo p, Clopper Pearson interval, BH; seeds `[2029, rep]` | `59_rev_perm_strat.py` (`permuted`, `one`, `mc_p`, `summarise`) |
+| Onset error and its paired comparison with the clock (Sections III-C, III-F) | `60_rev_onset_dose.py` (`first_alarm`, `onset_tables`) |
+| Dose reference (Section IV-C) | `60_rev_onset_dose.py` (`DOSE`, `dose_tables`) |
+| Label at severity 2 or more (Section V-C) | `60_rev_onset_dose.py` (`label2_table`) |
+| Influence of single groups; interval of the control detection rate (Sections V-B, V-D) | `61_rev_influence.py` (`influence`, `control_ci`) |
+| Supporting Information numbering by first citation | `csp.si_revision.SI_ORDER`, `si_relabel` |

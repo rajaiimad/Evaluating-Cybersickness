@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "If you use this code, please cite the paper and this repository."
-title: "A Safety Oriented Evaluation Protocol for Cybersickness Detection in Virtual Reality: code and results"
+title: "Evaluating Cybersickness Detectors Against an Elapsed Time Baseline: A Group Disjoint Protocol With Positive and Negative Controls: code and results"
 authors:
   - {family-names: Darabee, given-names: Rajai}
   - {family-names: Muniandy, given-names: Manoranjitham}
@@ -9,7 +9,7 @@ authors:
   - {family-names: Shindi, given-names: Omar}
 version: "1.0.0"
 license: MIT
-repository-code: "https://github.com/rajaiimad/cybersickness-safety-protocol"
+repository-code: "https://github.com/rajaiimad/Evaluating-Cybersickness"
 # doi: 10.5281/zenodo.XXXXXXX   # add after archiving the submitted release on Zenodo
 references:
   - type: dataset

@@ -5,7 +5,7 @@ are those used to typeset the manuscript.
 Outputs: outputs/paper_tables/Table_<n>.csv (one file per table, data rows only, printed column labels as header)
          outputs/paper_tables/PAPER_TABLES.md (all tables in one readable file)
 Main text: Tables II, III, IV, V, VI and VIII (Table I is the literature table and Table VII the reporting checklist,
-neither contains a result). Supporting Information: Tables S1 to S7."""
+neither contains a result). Supporting Information: Tables S1 to S18, written under their printed numbers (csp.si_revision.SI_NUM)."""
 import sys, pathlib; sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "src"))
 from decimal import Decimal, ROUND_HALF_UP
 import numpy as np, pandas as pd
@@ -22,7 +22,7 @@ def T(name, idx="model"):
 # ---- number formats used in the paper
 def f3(x): return f"{x:.3f}"
 def f1(x): return f"{x:.1f}"
-def sg(x): return ("+" if x >= 0 else "−") + f"{abs(x):.3f}"
+def sg(x): return "0.000" if abs(x) < 0.0005 else ("+" if x >= 0 else "−") + f"{abs(x):.3f}"
 def iv(lo, hi): return f"[{lo:.3f}, {hi:.3f}]".replace("-", "−")
 def pm(df, m, k): return f"{df.loc[m, k]:.3f} ± {df.loc[m, k + '_ci']:.3f}"
 def cnt(x): return f"{int(round(x)):,}"
@@ -58,19 +58,22 @@ for m in ORDER:
     r = PR.loc[m]
     tm_ = (f"{f3(REF)} {iv(LA.tm_ref_lo.iloc[0], LA.tm_ref_hi.iloc[0])}" if m == "Clock"
            else f"{f3(LA.loc[m, 'tm_lpo'])} {iv(LA.loc[m, 'tm_lpo_lo'], LA.loc[m, 'tm_lpo_hi'])}")
-    rows.append([m if m != "Clock" else "Clock (reference)", pm(PR, m, "mcc"), f3(r.rec), f3(r.spec), f3(r.alarm), tm_,
+    rows.append([m if m != "Clock" else "Clock (Atime: elapsed time)", pm(PR, m, "mcc"), f3(r.rec), f3(r.spec), f3(r.alarm), tm_,
                  pm(PR, m, "fold_auc"), f3(r.pooled_mcc), f3(r.pooled_alarm), f3(r.fa_all), f3(r.never_sick_alarm)])
 out["III"] = (["Detector", "Fold MCC ± 95% half width", "Fold recall", "Fold specificity", "Fold alarm rate",
-               "Atime LPGO [95% CI]", "Fold AUC ± 95%", "Pooled MCC", "Pooled alarm rate", "False alarm rate, all 22 groups",
+               "Atime LPGO [95% CI]", "Fold AUC ± 95% half width", "Pooled MCC", "Pooled alarm rate", "False alarm rate, all 22 groups",
                "Alarm, no sickness groups"], rows)
 
 # ---------------------------------------------------------------- Table IV  paired comparisons
-out["IV"] = (["Detector", "MCC", "ΔMCC", "t test p", "Corrected p", "Wilcoxon p", "BH p", "ΔAtime LPGO [95% CI]",
-              "Bonferroni CI", "ΔAtime pooled [95% CI]"],
-             [[m, f3(S8.loc[m, "mcc"]), sg(S8.loc[m, "dmcc"]), f3(S8.loc[m, "p_t"]), f3(S8.loc[m, "p_nb"]),
+RP = pd.read_csv(TABLES / "T_rev_power.csv").set_index("model")     # revision: 95% interval of the MCC difference
+PSR = pd.read_csv(TABLES / "T_rev_perm_strat.csv").set_index("learner")     # within game randomization test (step 59)
+out["IV"] = (["Detector", "MCC", "ΔMCC [95% CI]", "t test p", "Corrected p", "Wilcoxon p", "BH p", "ΔAtime LPGO [95% CI]",
+              "Randomization p (BH)", "ΔAtime pooled [95% CI]"],
+             [[m, f3(S8.loc[m, "mcc"]), f"{sg(S8.loc[m, 'dmcc'])} {iv(RP.loc[m, 'ci_lo'], RP.loc[m, 'ci_hi'])}",
+               f3(S8.loc[m, "p_t"]), f3(S8.loc[m, "p_nb"]),
                f3(S8.loc[m, "p_w"]), f3(S8.loc[m, "p_bh5"]),
                f"{sg(LA.loc[m, 'd_lpo'])} {iv(LA.loc[m, 'd_lpo_lo'], LA.loc[m, 'd_lpo_hi'])}",
-               iv(LA.loc[m, "d_lpo_lo_bonf"], LA.loc[m, "d_lpo_hi_bonf"]),
+               f"{PSR.loc[m, 'p_perm']:.3f} ({PSR.loc[m, 'p_perm_bh']:.3f})",
                f"{sg(LA.loc[m, 'd_pooled'])} {iv(LA.loc[m, 'd_pooled_lo'], LA.loc[m, 'd_pooled_hi'])}"] for m in DET])
 
 # ---------------------------------------------------------------- Table V  severity
@@ -96,7 +99,7 @@ for kind in ("state", "trait"):
         rows.append([kind if abs(d_) < 1e-12 else "", f"{d_:g}", sg(r.dmcc), pct(r.power_t), sg(r.de), pct(r.power_pooled),
                      pct(r.below_pooled), sg(r.dl), pct(r.power_lpo), pct(r.power_cal)])
 out["VI"] = (["Signal", "δ", "Fold MCC mean Δ", "Fold MCC detected", "Atime pooled mean Δ", "Atime pooled detected",
-              "Atime pooled declared worse", "Atime LPGO mean Δ", "Atime LPGO detected", "Atime LPGO detected, calibrated"], rows)
+              "Atime pooled declared worse", "Atime LPGO mean Δ", "Atime LPGO detected", "Atime LPGO detected, null threshold"], rows)
 
 # ---------------------------------------------------------------- Table VIII  features (counted from the code)
 from csp.design import cols, PRIMARY, desc, cond          # noqa: E402
@@ -154,6 +157,17 @@ out["S7"] = (["Signal", "δ", "Replicates", "Detected, MCC Wilcoxon", "Detected,
               "Mean Atime pooled", "Mean Atime LPGO", "Below reference, pooled", "Below reference, LPGO"],
              [[r_.kind, f"{r_.delta:g}", str(int(r_.reps)), pct(r_.power_w), pct(r_.power_t), sg(r_.dauc), f3(r_.tm_pooled),
                f3(r_.tm_lpo), pct(r_.below_pooled), pct(r_.below_lpo)] for r_ in CT_.itertuples()])
+
+# ---------------------------------------------------------------- revision: Supporting Information Tables S8 to S14
+from csp.si_revision import si_tables, SI_NUM          # noqa: E402
+orig = {k: out.pop(k) for k in [f"S{i}" for i in range(1, 8)]}          # printed numbers: order of first citation
+out.update({SI_NUM[k]: v for k, v in orig.items()})
+for t in si_tables():
+    out[t["label"].replace("TABLE ", "")] = (t["header"], t["rows"])
+# numbering of the submitted (condensed) manuscript: the literature table, the severity table and the feature table are
+# Supporting Information tables there (tools/revision/condense_manuscript.py)
+MAIN = {"II": "I", "III": "II", "IV": "III", "VI": "IV", "V": SI_NUM["S20"], "VIII": SI_NUM["S21"]}
+out = {MAIN.get(k, k): v for k, v in out.items()}
 
 # ---------------------------------------------------------------- write
 md = ["# Tables of the paper, regenerated from outputs/tables\n"]

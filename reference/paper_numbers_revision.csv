@@ -1,0 +1,71 @@
+id,location,printed,expr
+v01,Abstract; Sec V-A; Sec VI-C,0.18,f2(PW.mde_nb.min())
+v02,Abstract; Sec V-A; Sec VI-C,0.39,f2(PW.mde_nb.max())
+v03,Abstract; Conclusion,48 to 211 groups,f'{int(PW.n010_nb.min())} to {int(PW.n010_nb.max())} groups'
+v04,Abstract,95% of the compared window pairs,str(round(100*(1-COV[(COV.bin_s==30)&(COV.min_n==20)].within_share.iloc[0])))+'% of the compared window pairs'
+v05,Sec III-F; Sec V; Sec V-A,95.4%,pct1(1-COV[(COV.bin_s==30)&(COV.min_n==20)].within_share.iloc[0])
+v06,Sec V-D interval of the detection rate,(95% interval 21% to 50%,"f""(95% interval {100*CCI.loc[1.5,'cal_lo']:.0f}% to {100*CCI.loc[1.5,'cal_hi']:.0f}%"""
+v07,Sec V-A within group part,(-0.055 to +0.035) have intervals,"'('+sg(PA.loc[DET,'d_within'].min())+' to '+sg(PA.loc[DET,'d_within'].max())+') have intervals'"
+v08,Sec V-A within group widths,0.3 to 0.7 wide,"f'{(PA.loc[DET,'d_within_hi']-PA.loc[DET,'d_within_lo']).min():.1f} to {(PA.loc[DET,'d_within_hi']-PA.loc[DET,'d_within_lo']).max():.1f} wide'"
+v09,Sec V-A between group part,(+0.004 to +0.127),"'('+sg(PA.loc[DET,'d_between'].min())+' to '+sg(PA.loc[DET,'d_between'].max())+')'"
+v10,Sec V-A scenario,at most 0.011,"'at most '+f3(max(abs(SCC.loc[m+' with minus without scenario','d_full']) for m in ['RF','GB','RF+GB','LR']))"
+v11,Sec V-A time and scenario reference,"0.535, +0.006","f3(SC.loc['GB time and scenario','tm_full'])+', '+sg(SC.loc['GB time and scenario','d_full'])"
+v12,Sec V-A dose reference LR,"-0.024 [-0.144, 0.108]","sg(DS.loc['LR dose','d_full'])+' ['+f3(DS.loc['LR dose','d_full_lo'])+', '+f3(DS.loc['LR dose','d_full_hi'])+']'"
+v13,Sec V-A dose reference GB,"-0.053 [-0.202, 0.091]","sg(DS.loc['GB dose','d_full'])+' ['+f3(DS.loc['GB dose','d_full_lo'])+', '+f3(DS.loc['GB dose','d_full_hi'])+']'"
+v14,Sec V-A RF on elapsed time only,0.070 below elapsed time,"f3(-PA.loc['RF time only','d_full'])+' below elapsed time'"
+v15,Sec V-A learner matched RF,"alone by 0.193 [0.036, 0.359]","'alone by '+f3(LM.loc['RF minus RF on elapsed time only','d_full'])+' ['+f3(LM.loc['RF minus RF on elapsed time only','d_full_lo'])+', '+f3(LM.loc['RF minus RF on elapsed time only','d_full_hi'])+']'"
+v16,Sec V-A learner matched GB,"alone by 0.086 [-0.044, 0.221]","'alone by '+f3(LM.loc['GB minus GB on elapsed time only','d_full'])+' ['+f3(LM.loc['GB minus GB on elapsed time only','d_full_lo'])+', '+f3(LM.loc['GB minus GB on elapsed time only','d_full_hi'])+']'"
+v17,Sec V-A bins,change by at most 0.023,'change by at most '+f3(max(abs(r.d_full-BI[(BI.bin_s==30)&(BI.min_n==20)].set_index('model').d_full[r.model]) for r in BI.itertuples()))
+v18,Sec V-A RF interval,-0.063 to +0.229,"f3(PW.loc['RF','ci_lo'])+' to '+sg(PW.loc['RF','ci_hi'])"
+v19,Sec V-A LR interval,-0.366 to +0.032,"f3(PW.loc['LR','ci_lo'])+' to '+sg(PW.loc['LR','ci_hi'])"
+v20,Sec V-A MDD plain,0.13 to 0.28,f2(PW.mde.min())+' to '+f2(PW.mde.max())
+v21,Sec V-A groups plain,26 to 112 two class groups (median 69),f'{int(PW.n010.min())} to {int(PW.n010.max())} two class groups (median {int(PW.n010.median())})'
+v22,Sec V-A groups corrected,48 to 211 (median 130),f'{int(PW.n010_nb.min())} to {int(PW.n010_nb.max())} (median {int(PW.n010_nb.median())})'
+v23,Sec V-A LORO pooled,-0.011 to +0.103 under LORO,sg(UN[UN.design=='loro'].d_pooled.min())+' to '+sg(UN[UN.design=='loro'].d_pooled.max())+' under LORO'
+v24,Sec V-A merged pooled,-0.016 to +0.110 under the merged,sg(UN[UN.design=='merged'].d_pooled.min())+' to '+sg(UN[UN.design=='merged'].d_pooled.max())+' under the merged'
+v25,Sec V-A LORO within share,only 0.3% of the matched pairs,'only '+pct1(UN[UN.design=='loro'].within_share.iloc[0])+' of the matched pairs'
+v26,Sec V-B time matched severity,"6,400 pairs remain, 55% of them from group 10","f""{int(SV[SV.analysis=='time matched A_sev'].pairs.iloc[0]):,} pairs remain, {round(100*SV[SV.analysis=='time matched A_sev'].largest_share.iloc[0])}% of them from group 10"""
+v27,Sec V-B groups 10 and 14,"which supply 87% of the pairs, more than 96%","f""which supply {round(100*SV[SV.analysis=='time matched A_sev by group'].set_index('group').loc[[10,14]].pairs.sum()/SV[SV.analysis=='time matched A_sev'].pairs.iloc[0])}% of the pairs, more than {round(100*(1-SV[SV.analysis=='time matched A_sev by group'].set_index('group').loc[[10,14]].same_recording_share.max()))}%"""
+v28,Sec V-C window gap at w = 61,+0.083 to +0.097 against +0.018 to +0.087,"(lambda G: sg(G.loc[61,['RF','GB','RF+GB']].min())+' to '+sg(G.loc[61,['RF','GB','RF+GB']].max())+' against '+sg(G.drop(index=61)[['RF','GB','RF+GB']].min().min())+' to '+sg(G.drop(index=61)[['RF','GB','RF+GB']].max().max()))(GAP.pivot(index='w',columns='model',values='diff'))"
+v29,Sec V-C label at severity 2,20 episodes in 15 recordings remain and 9 groups,f'{int(L2.episodes.iloc[0])} episodes in {int(L2.recordings.iloc[0])} recordings remain and {int(L2.two_class_groups.iloc[0])} groups'
+v30,Sec V-C label at severity 2,by +0.035 to +0.166,'by '+sg(L2.dmcc.min())+' to '+sg(L2.dmcc.max())
+v31,Sec V-C label at severity 2,(smallest 0.164;,f'(smallest {L2.p_w.min():.3f};'
+v32,Sec V-E GB trait null spread,standard deviation 0.094 against a mean bootstrap standard error of 0.069,"'standard deviation '+f3(ctl('GB','trait',0).null_sd)+' against a mean bootstrap standard error of '+f3(ctl('GB','trait',0).null_mean_se)"
+v33,Sec V-E GB state detection,2% of replicates at δ = 0.1 and 78% at δ = 0.5,"pc0(ctl('GB','state_ar',0.1).power_cal)+' of replicates at δ = 0.1 and '+pc0(ctl('GB','state_ar',0.5).power_cal)+' at δ = 0.5'"
+v34,Sec V-E RF thresholds,"(0.101 trait, 0.066 state)","'('+f3(ctl('RF','trait',0).t_cal)+' trait, '+f3(ctl('RF','state_ar',0).t_cal)+' state)'"
+v35,Sec V-E GB thresholds,(0.159 and 0.089),"'('+f3(ctl('GB','trait',0).t_cal)+' and '+f3(ctl('GB','state_ar',0).t_cal)+')'"
+v36,Sec V-D randomization p,"0.045 (RF), 0.116 (GB), 0.061 (RF+GB), 0.455 (LR) and 0.169 (MLP)","', '.join(f""{PS.loc[m,'p_perm']:.3f} ({m})"" for m in DET[:4])+f"" and {PS.loc['MLP','p_perm']:.3f} (MLP)"""
+v37,Sec V-E within game permutation observed,+0.005 to +0.124,"sg(PS.loc[DET,'observed'].min())+' to '+sg(PS.loc[DET,'observed'].max())"
+v38,Sec V-D randomization BH,The smallest adjusted p is 0.153,"f""The smallest adjusted p is {PS.loc[DET,'p_perm_bh'].min():.3f}"""
+v40,Sec V-F onset,a median of 87 s after onset,"f""a median of {ON.loc['Clock','median_err']:.0f} s after onset"""
+v41,Sec V-E onset,8 to 17 s smaller,"f""{-OP.loc[['RF','GB','RF+GB'],'d_abs_err'].max():.0f} to {-OP.loc[['RF','GB','RF+GB'],'d_abs_err'].min():.0f} s smaller"""
+v42,Sec V-E onset,adjusted Wilcoxon test (p ≥ 0.52),f'adjusted Wilcoxon test (p ≥ {OP.p_w_bh.min():.2f})'
+v43,Sec VI-A pooling bias,by 0.060 to 0.137 relative to scoring on pairs,"'by '+f3(-max([LPA.loc[m,'tm_pooled']-LPA.loc[m,'tm_lpo'] for m in ['Clock','RF time only','GB time only']]))+' to '+f3(-min([LPA.loc[m,'tm_pooled']-LPA.loc[m,'tm_lpo'] for m in ['Clock','RF time only','GB time only']]))+' relative to scoring on pairs'"
+v44,Sec V-D null threshold delta 1.5,LPGO detects 38% of replicates with the bootstrap rule and 33% with the null threshold,'LPGO detects '+pc0(TC[(TC.kind=='trait')&(TC.delta==1.5)].power_lpo.iloc[0])+' of replicates with the bootstrap rule and '+pc0(TC[(TC.kind=='trait')&(TC.delta==1.5)].power_cal.iloc[0])+' with the null threshold'
+v45,Sec V-D randomization Monte Carlo interval,0.017 to 0.077,"f""{PS.loc['RF','p_mc_lo']:.3f} to {PS.loc['RF','p_mc_hi']:.3f}"""
+v46,Sec V-D null 95th percentiles,0.110 to 0.131,"f3(PS.loc[DET,'null_q95'].min())+' to '+f3(PS.loc[DET,'null_q95'].max())"
+v47,Sec V-E onset LR and MLP,10 to 23 s larger,"f""{OP.loc[['LR','MLP'],'d_abs_err'].min():.0f} to {OP.loc[['LR','MLP'],'d_abs_err'].max():.0f} s larger"""
+v48,"Sec V-C label at severity 2, clock",MCC is 0.088,'MCC is '+f3(L2.clock.iloc[0])
+v49,"Sec V-B influence, RF",between +0.096 and +0.162,'between '+sg(INF.drop(index='all').RF.min())+' and '+sg(INF.drop(index='all').RF.max())
+v50,"Sec V-B influence, LR",between -0.023 and +0.026,'between '+sg(INF.drop(index='all').LR.min())+' and '+sg(INF.drop(index='all').LR.max())
+v51,"Sec V-B influence, largest group",29.4% of the pairs,pct1(INF.drop(index='all').pair_share.max())+' of the pairs'
+v52,"Sec V-D lower tail, trait null",30% of trait replicates,pc0(TC[(TC.kind=='trait')&(TC.delta==0)].below_lpo.iloc[0])+' of trait replicates'
+v53,"Sec V-D lower tail, own learners, trait",14% to 23% for the trait signal,pc0((CTL[(CTL.delta==0)&(CTL.kind=='trait')].below_lpo).min())+' to '+pc0((CTL[(CTL.delta==0)&(CTL.kind=='trait')].below_lpo).max())+' for the trait signal'
+v54,Sec V-E onset minimum detectable difference,36 to 39 s,f'{OP.mdd.min():.0f} to {OP.mdd.max():.0f} s'
+v55,"Table II note, clock accuracy",0.646 (clock),"f3(PR.loc['Clock','acc'])+' (clock)'"
+v56,"Table II note, clock balanced accuracy",0.710 for the,"f3(PR.loc['Clock','bal_acc'])+' for the'"
+v57,Sec V-C alarm rate of the tree ensembles,"0.261 to 0.306 with the indicators, 0.248 to 0.298 without","(lambda t: f3(O99.loc[t,'never_sick_alarm'].min())+' to '+f3(O99.loc[t,'never_sick_alarm'].max())+' with the indicators, '+f3(PR.loc[t,'never_sick_alarm'].min())+' to '+f3(PR.loc[t,'never_sick_alarm'].max())+' without')(['RF','GB','RF+GB'])"
+v59,Sec V-D bootstrap coverage in null replicates,4.9% to 9.1%,"pct1(PS.loc[DET,'null_above'].min())+' to '+pct1(PS.loc[DET,'null_above'].max())"
+v60,Sec V-D bootstrap coverage counts,(2 to 10 replicates per detector),"f""({int(PS.loc[DET,'null_above_k'].min())} to {int(PS.loc[DET,'null_above_k'].max())} replicates per detector)"""
+v61,Sec V-D fold MCC under the null,0.077 to 0.133 on average,"f3(-PS.loc[DET,'null_dmcc_mean'].max())+' to '+f3(-PS.loc[DET,'null_dmcc_mean'].min())+' on average'"
+v62,"Sec V-D lower tail, own learners, state",16% to 34% for the autocorrelated state signal,pc0((CTL[(CTL.delta==0)&(CTL.kind=='state_ar')].below_lpo).min())+' to '+pc0((CTL[(CTL.delta==0)&(CTL.kind=='state_ar')].below_lpo).max())+' for the autocorrelated state signal'
+v63,Sec V-B jackknife standard error,jackknife standard error of 0.077,"'jackknife standard error of '+f3(JSE.loc['RF','jk_se'])"
+v64,Sec V-D null intervals below zero,wholly below zero in 9.1% to 18.6%,"'wholly below zero in '+pct1(PS.loc[DET,'null_below'].min())+' to '+pct1(PS.loc[DET,'null_below'].max())"
+v65,Sec V-D null means,(-0.033 to -0.006),"'('+sg(PS.loc[DET,'null_mean'].min())+' to '+sg(PS.loc[DET,'null_mean'].max())+')'"
+v66,"Sec V-D fold MCC under the null, tree ensembles",(unadjusted p = 0.005 to 0.011),"'(unadjusted p = '+f3(PS.loc[['RF','GB','RF+GB'],'p_perm_mcc'].min())+' to '+f3(PS.loc[['RF','GB','RF+GB'],'p_perm_mcc'].max())+')'"
+v67,"Sec V-D fold MCC under the null, MLP",(p = 0.200),"'(p = '+f3(PS.loc['MLP','p_perm_mcc'])+')'"
+v68,"Sec V-D fold MCC under the null, LR",(p = 0.913),"'(p = '+f3(PS.loc['LR','p_perm_mcc'])+')'"
+v69,"Sec V-C threshold grid, rank of the primary rule",the 2nd most favorable of 30 combinations for the RF and the 28th for LR and the MLP,"f""the {int(TG[TG.model=='RF'].rank_primary.iloc[0])}nd most favorable of 30 combinations for the RF and the {int(TG[TG.model=='LR'].rank_primary.iloc[0])}th for LR and the MLP"""
+v70,Sec V-C clock alarm rate at threshold 0.7,0.089 of windows,f3(TG[(TG.model=='RF')&(TG.w==61)&((TG.tau-0.7).abs()<1e-9)].clock_alarm.iloc[0])+' of windows'
+v71,Sec V-C clock fold MCC at threshold 0.7,falls to 0.161,'falls to '+f3(TG[(TG.model=='RF')&(TG.w==61)&((TG.tau-0.7).abs()<1e-9)].clock.iloc[0])
+v72,"Table S9 note, rank of the MLP",MLP 28,'MLP '+str(int(TG[TG.model=='MLP'].rank_primary.iloc[0]))

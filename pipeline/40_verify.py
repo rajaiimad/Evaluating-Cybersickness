@@ -16,6 +16,7 @@ Usage: python pipeline/40_verify.py [--tol 1e-9] [--skip-tables]
 Exit status 0 when every check passes."""
 import sys, pathlib; sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "src"))
 import argparse, csv
+sys.stdout.reconfigure(encoding="utf-8")     # the report prints non ASCII characters; a redirected Windows console is cp1252
 from decimal import Decimal, ROUND_HALF_UP
 import numpy as np, pandas as pd
 
@@ -83,7 +84,7 @@ for ref in sorted((REFERENCE / "paper_tables").glob("Table_*.csv")):
     if len(printed) != len(gen):
         bad.append(f"{len(gen)} rows generated, {len(printed)} printed")
     for i, (p, g) in enumerate(zip(printed, gen)):
-        cells = range(1, len(p)) if ref.stem == "Table_II" else range(len(p))   # Table II: labels are text
+        cells = range(1, len(p)) if ref.stem == "Table_I" else range(len(p))   # Table I (dataset): labels are text
         for j in cells:
             if j >= len(g) or norm(p[j]) != norm(g[j]):
                 bad.append(f"row {i + 1} col {j + 1}: printed '{p[j]}' regenerated '{g[j] if j < len(g) else ''}'")

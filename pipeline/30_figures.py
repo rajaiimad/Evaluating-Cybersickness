@@ -251,7 +251,7 @@ if "6" in which:
             a.plot(c.delta, c[k], marker=mk, ms=4, lw=1.3, color=col, ls=ls, label=name,
                    mfc="white" if k == "power_pooled" else col)
         a.plot(c.delta, c["power_cal"], marker="o", ms=3, lw=1.1, color="#2a78d6", ls=":", mfc="white",
-               label="$A_{time}$, LPGO, calibrated")
+               label="$A_{time}$, LPGO, null threshold")
         a.axhline(0.025, color="#b0aea8", ls=":", lw=0.8); a.axhline(0.8, color="#b0aea8", ls="--", lw=0.7)
         a.set_ylim(-0.02, 1.02); a.set_xlabel(f"Signal strength δ ({kind} signal)")
         a.set_ylabel("Share of replicates detected"); a.grid(**GRID); a.set_axisbelow(True); tag(a, lab, -0.2)

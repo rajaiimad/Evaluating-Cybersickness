@@ -1,0 +1,19 @@
+Learner,Signal,δ,Replicates,Mean ΔAtime LPGO,Detected,Below,"Detected, null threshold",MCC t test
+GB,"state, AR(1) noise",0,100,−0.016,6%,17%,3%,3%
+GB,"state, AR(1) noise",0.1,50,−0.021,2%,18%,2%,6%
+GB,"state, AR(1) noise",0.25,50,+0.028,22%,4%,12%,8%
+GB,"state, AR(1) noise",0.5,50,+0.132,92%,0%,78%,24%
+GB,trait,0,100,−0.033,5%,20%,3%,0%
+GB,trait,1,50,+0.014,14%,8%,4%,0%
+GB,trait,2,50,+0.072,22%,4%,22%,0%
+GB,trait,3,50,+0.139,48%,0%,42%,0%
+LR,"state, AR(1) noise",0,100,−0.009,2%,34%,3%,1%
+LR,"state, AR(1) noise",0.1,50,+0.001,6%,22%,8%,2%
+LR,"state, AR(1) noise",0.25,50,+0.058,36%,0%,46%,0%
+LR,"state, AR(1) noise",0.5,50,+0.157,94%,0%,100%,20%
+LR,trait,0,100,−0.009,4%,23%,3%,0%
+LR,trait,1,50,+0.072,18%,12%,10%,0%
+LR,trait,2,50,+0.145,44%,0%,26%,4%
+LR,trait,3,50,+0.181,70%,0%,42%,0%
+RF,"state, AR(1) noise",0,50,−0.021,2%,16%,4%,2%
+RF,trait,0,50,−0.035,4%,14%,4%,0%

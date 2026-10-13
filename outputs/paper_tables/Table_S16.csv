@@ -1,0 +1,24 @@
+Analysis,Model,Fold mean MCC,Reference,Difference [95% CI],Wilcoxon p,Two class units
+Label at severity 2 or more,RF,0.123,0.088,"+0.035 [−0.147, 0.218]",0.734,9 groups
+Label at severity 2 or more,GB,0.203,0.088,"+0.115 [−0.166, 0.397]",0.426,9 groups
+Label at severity 2 or more,RF+GB,0.161,0.088,"+0.073 [−0.165, 0.312]",0.496,9 groups
+Label at severity 2 or more,LR,0.254,0.088,"+0.166 [−0.038, 0.370]",0.164,9 groups
+Label persistence rule,Previous label,0.971,0.365,+0.607,,16 groups
+Label persistence rule,Majority of the previous 61 labels,0.714,0.365,+0.349,,16 groups
+Merged grouping (20 groups),RF,0.446,0.448,−0.001,,16 groups
+Merged grouping (20 groups),GB,0.461,0.461,0.000,,16 groups
+Merged grouping (20 groups),RF+GB,0.462,0.462,0.000,,16 groups
+Merged grouping (20 groups),LR,0.199,0.197,+0.001,,16 groups
+Merged grouping (20 groups),MLP,0.279,0.288,−0.009,,16 groups
+Merged grouping (20 groups),Clock,0.368,0.365,+0.003,,16 groups
+Smoothing window chosen on validation groups,RF,0.375,0.369,+0.006,,16 groups
+Smoothing window chosen on validation groups,GB,0.410,0.369,+0.041,,16 groups
+Smoothing window chosen on validation groups,RF+GB,0.393,0.369,+0.023,,16 groups
+Smoothing window chosen on validation groups,LR,0.206,0.369,−0.163,,16 groups
+Smoothing window chosen on validation groups,MLP,0.334,0.369,−0.035,,16 groups
+Seed 1,RF,0.433,0.365,+0.069,,16 groups
+Seed 1,RF+GB,0.458,0.365,+0.093,,16 groups
+Seed 1,MLP,0.369,0.365,+0.005,,16 groups
+Seed 2,RF,0.442,0.365,+0.078,,16 groups
+Seed 2,RF+GB,0.457,0.365,+0.092,,16 groups
+Seed 2,MLP,0.304,0.365,−0.061,,16 groups

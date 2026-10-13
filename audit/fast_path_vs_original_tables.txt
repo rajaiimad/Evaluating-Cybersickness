@@ -1,0 +1,16 @@
+result tables recomputed by the fast path (Python 3.13, scikit-learn 1.6) against the original files (largest absolute difference)
+  T_ablation.csv                       3.9e-14  text columns equal: True
+  T_foldauc_paired_vs_clock.csv        2.8e-16  text columns equal: True
+  T_full99_mlp.csv                     3.7e-14  text columns equal: True
+  T_loro.csv                           3.1e-16  text columns equal: True
+  T_merged.csv                         3.9e-14  text columns equal: True
+  T_nested_w.csv                       3.7e-14  text columns equal: True
+  T_original99.csv                     4.5e-14  text columns equal: True
+  T_paired_vs_clock.csv                1.9e-16  text columns equal: True
+  T_primary.csv                        3.9e-14  text columns equal: True
+  T_primary_stats.csv                  4.2e-14  text columns equal: True
+  T_secondary_tests.csv                5.0e-16  text columns equal: True
+  T_smoothing_paired_vs_clock.csv      1.9e-16  text columns equal: True
+  T_sup_seeds.csv                      2.2e-16  text columns equal: True
+  T_time_only.csv                      1.7e-16  text columns equal: True
+66 tables compared; 14 differ; largest difference 4.5e-14

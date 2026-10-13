@@ -1,0 +1,15 @@
+== predictions refitted in a fresh folder against the saved predictions (largest absolute difference)
+P_scen_logo.csv    files   1  t: 0.0e+00  proba: 0.0e+00
+P_dose_logo.csv    files   1  t: 0.0e+00  proba: 0.0e+00
+P_label2_logo.csv  files   1  t: 0.0e+00  proba: 0.0e+00
+lpgo_scen          files 216  t: 0.0e+00  proba: 0.0e+00
+lpgo_dose          files 216  t: 0.0e+00  proba: 0.0e+00
+== result tables recomputed from the refit against reference/tables
+T_rev_scenario             0.0e+00
+T_rev_scenario_contrast    0.0e+00
+T_rev_refit_vs_shipped     0.0e+00
+T_rev_dose                 0.0e+00
+T_rev_dose_contrast        0.0e+00
+T_rev_label2               0.0e+00
+T_rev_onset                0.0e+00
+T_rev_onset_paired         0.0e+00
