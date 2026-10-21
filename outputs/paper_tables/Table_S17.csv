@@ -1,4 +1,0 @@
-Model,Atime pooled,Pooled minus elapsed time [95% CI],Atime LPGO,LPGO minus elapsed time [95% CI],Pooled minus LPGO
-Clock (LR on elapsed time),0.444,"−0.086 [−0.129, −0.048]",0.530,"0.000 [−0.001, 0.002]",−0.086
-RF on elapsed time,0.400,"−0.130 [−0.236, −0.016]",0.459,"−0.070 [−0.172, 0.034]",−0.060
-GB on elapsed time,0.399,"−0.131 [−0.176, −0.085]",0.536,"+0.006 [−0.015, 0.025]",−0.137
