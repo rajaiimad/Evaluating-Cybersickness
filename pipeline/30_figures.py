@@ -2,7 +2,7 @@
 Fig. 3(a)). Every plotted value is read from the analysis outputs.
 
   fig1_protocol.png   Fig. 1  evaluation protocol (counts from T_dataset_facts.csv)
-  fig2_leakage.png    Fig. 2  random window splitting against group disjoint evaluation (T_leakage, T_leakage_loro)
+  fig2_leakage.png    Fig. 2  random-window splitting against group-disjoint evaluation (T_leakage, T_leakage_loro)
   fig3_primary.png    Fig. 3  primary comparison (T_primary, T_lpgo_atime, P_primary)
   fig4_severity.png   Fig. 4  severity at controlled operating points (CURVE_s3_vs_alarm, T_asev_paired, T_asev_by_group)
   fig5_temporal.png   Fig. 5  smoothing window and nested feature analysis (T_smoothing, T_ablation, T_original99)
@@ -53,15 +53,15 @@ def fold_mcc(g):
 if "1" in which:
     stages = [
         ("Public VR gameplay dataset", f"{int(DF['windows']):,} windows, {int(DF['recordings'])} recordings, four severity levels", "#f2f2f2", "#7f7f7f"),
-        ("Recovery of recordings and reconstructed groups", f"{int(DF['participant_groups'])} descriptor defined groups; archive start times checked", "#e3ecf7", "#2a78d6"),
-        ("Group disjoint evaluation", f"leave one reconstructed group out: {int(DF['participant_groups'])} folds, {int(DF['groups_with_both_classes'])} with both classes", "#e3ecf7", "#2a78d6"),
-        ("Past only features, unit variables excluded", f"{int(DF['features_primary'])} features; participant descriptor indicators left out", "#e3ecf7", "#2a78d6"),
-        ("Training only preprocessing", "robust scaling fitted on training groups; no oversampling", "#e3ecf7", "#2a78d6"),
-        ("Five detectors and an elapsed time clock", "RF, GB, RF+GB, LR, MLP; the clock is the reference", "#eeecf6", "#4a3aa7"),
+        ("Recovery of recordings and reconstructed groups", f"{int(DF['participant_groups'])} descriptor-defined groups; archive start times checked", "#e3ecf7", "#2a78d6"),
+        ("Group-disjoint evaluation", f"leave-one-reconstructed-group-out: {int(DF['participant_groups'])} folds, {int(DF['groups_with_both_classes'])} with both classes", "#e3ecf7", "#2a78d6"),
+        ("Past-only features, unit variables excluded", f"{int(DF['features_primary'])} features; participant descriptor indicators left out", "#e3ecf7", "#2a78d6"),
+        ("Training-only preprocessing", "robust scaling fitted on training groups; no oversampling", "#e3ecf7", "#2a78d6"),
+        ("Five detectors and an elapsed-time clock", "RF, GB, RF+GB, LR, MLP; the clock is the reference", "#eeecf6", "#4a3aa7"),
         ("One fixed operating rule", "trailing mean over w = 61 windows, threshold τ = 0.5, for all", "#eeecf6", "#4a3aa7"),
-        ("Comparison with elapsed time", "fold MCC against the clock; time matched AUC scored with LPGO models", "#e6f3ea", "#008300"),
+        ("Comparison with elapsed time", "fold MCC against the clock; time-matched AUC scored with LPGO models", "#e6f3ea", "#008300"),
         ("Safety and deployment endpoints", "false alarms in all groups; severity at a matched alarm rate; prevalence", "#e6f3ea", "#008300"),
-        ("Controls and sensitivity", "synthetic signals, time only models, randomization; LORO, validated rule", "#fcebe4", "#eb6834"),
+        ("Controls and sensitivity", "synthetic signals, time-only models, randomization; LORO, validated rule", "#fcebe4", "#eb6834"),
     ]
     fig, ax = plt.subplots(figsize=(4.6, 6.2)); ax.set_xlim(0, 10); ax.set_ylim(0, 10); ax.axis("off")
     n = len(stages); top = 9.6; step = 9.2 / (n - 1); h = 0.74; ys = []
@@ -84,8 +84,8 @@ if "2" in which:
     LK = pd.read_csv(TABLES / "T_leakage.csv").set_index("split"); LL = pd.read_csv(TABLES / "T_leakage_loro.csv").iloc[0]
     rnd76, logo76 = LK.loc["random 5 fold, 76 features"], LK.loc["group disjoint, 76 features"]
     rnd99, logo99 = LK.loc["random 5 fold, 99 features"], LK.loc["group disjoint, 99 features"]
-    STY = [("Random 5 fold (windows)", "#b01c2e", None), ("Leave one recording out", "#8c8c8c", "//"),
-           ("Leave one group out", "#2166ac", ".")]
+    STY = [("Random 5 fold (windows)", "#b01c2e", None), ("Leave-one-recording-out", "#8c8c8c", "//"),
+           ("Leave-one-group-out", "#2166ac", ".")]
     with plt.rc_context({"font.family": "serif", "font.serif": ["Times New Roman", "Liberation Serif", "DejaVu Serif"],
                          "font.size": 9, "hatch.linewidth": 0.8}):
         fig, ax = plt.subplots(1, 2, figsize=(7.2, 2.9), gridspec_kw={"width_ratios": [1.25, 0.8]})
@@ -96,7 +96,7 @@ if "2" in which:
                 a.bar(x, v, bw, color=col, edgecolor="black", linewidth=0.6, hatch=hat, label=lab if i == 0 else None)
                 a.text(x, v + 0.015, f"{v:.3f}", ha="center", va="bottom", fontsize=7)
         a.set_xticks(range(3)); a.set_xticklabels([m for m, _ in metrics]); a.set_ylim(0, 1.12)
-        a.set_ylabel("Value (pooled held out windows)"); a.set_title("(a) RF, 76 features", fontsize=9)
+        a.set_ylabel("Value (pooled held-out windows)"); a.set_title("(a) RF, 76 features", fontsize=9)
         a = ax[1]; bw = 0.36
         for j, ((r, lg), (lab, col, hat)) in enumerate(zip([((rnd76, rnd99), 0), ((logo76, logo99), 2)], [STY[0], STY[2]])):
             for i, v in enumerate([float(r[0]["mcc"]), float(r[1]["mcc"])]):
@@ -127,7 +127,7 @@ if "3" in which:
         a.scatter(i + rng_.uniform(-0.2, 0.2, len(FMC[m])), FMC[m].values, s=5, color="#0b0b0b", zorder=3, lw=0)
     a.errorbar(x, v, yerr=S.mcc_ci.values, fmt="none", ecolor="#0b0b0b", elinewidth=0.8, capsize=2, zorder=4)
     a.axhline(S.loc["Clock", "mcc"], color=COL["Clock"], ls=":", lw=0.9)
-    a.set_ylabel("MCC, 16 two class folds"); tag(a, "(a)")
+    a.set_ylabel("MCC, 16 two-class folds"); tag(a, "(a)")
     a = ax[1]; ref = LA.tm_ref.iloc[0]
     for i, m in enumerate(DET):
         r = LA.loc[m]
@@ -140,7 +140,7 @@ if "3" in which:
     a.errorbar(5, ref, yerr=[[ref - rr.tm_ref_lo], [rr.tm_ref_hi - ref]], fmt="s", ms=5, color=COL["Clock"],
                elinewidth=0.9, capsize=2)
     a.axhline(ref, color=COL["Clock"], ls=":", lw=0.9); a.axhline(0.5, color="#b0aea8", ls="--", lw=0.7)
-    a.set_ylabel("Time matched AUC, $A_{time}$"); tag(a, "(b)")
+    a.set_ylabel("Time-matched AUC, $A_{time}$"); tag(a, "(b)")
     a.legend(handles=[Line2D([], [], marker="o", ls="", color="#52514e", ms=5, label="LPGO"),
                       Line2D([], [], marker="o", ls="", mfc="white", color="#52514e", ms=5, label="pooled LOGO"),
                       Line2D([], [], marker="s", ls="", color="#52514e", ms=5, label="elapsed time")],
@@ -149,7 +149,7 @@ if "3" in which:
     a.bar(x, v, color=cols, width=0.66, edgecolor="white", linewidth=0.8)
     a.errorbar(x, v, yerr=S.fa_all_ci.values, fmt="none", ecolor="#0b0b0b", elinewidth=0.8, capsize=2)
     a.axhline(S.loc["Clock", "fa_all"], color=COL["Clock"], ls=":", lw=0.9)
-    a.set_ylabel("False alarm rate, all 22 groups"); tag(a, "(c)")
+    a.set_ylabel("False-alarm rate, all 22 groups"); tag(a, "(c)")
     for a in ax:
         a.set_xticks(x); a.set_xticklabels(ORDER, rotation=40, ha="right", fontsize=7); a.grid(axis="y", **GRID)
         a.set_axisbelow(True)
@@ -183,7 +183,7 @@ if "4" in which:
     a.set_xticks(range(len(DET))); a.set_xticklabels(DET, rotation=40, ha="right", fontsize=7)
     a.set_ylabel("$A_{sev}$, detector minus clock"); a.grid(axis="y", **GRID); a.set_axisbelow(True); tag(a, "(b)", -0.2)
     a.legend(handles=[Line2D([], [], marker="o", ls="", color="#8a8984", ms=5, label="per group"),
-                      Line2D([], [], marker="D", ls="", color="#0b0b0b", ms=4, label="pair weighted"),
+                      Line2D([], [], marker="D", ls="", color="#0b0b0b", ms=4, label="pair-weighted"),
                       Line2D([], [], marker="s", ls="", mfc="white", color="#0b0b0b", ms=4, label="equal weights")],
              fontsize=6.3, frameon=False, loc="lower left")
     fig.tight_layout(w_pad=1.6); fig.savefig(OUT / "fig4_severity.png", bbox_inches="tight", pad_inches=0.03)
@@ -200,7 +200,7 @@ if "5" in which:
         a.plot(s.w, s.mcc, marker="o", lw=1.3, ms=3.5, color=COL[m], label=m, ls=":" if m == "Clock" else "-")
     a.axvline(61, ls="--", color="#8a8984", lw=0.8); a.set_xscale("log"); a.set_xticks([1, 15, 31, 61, 121, 201])
     a.set_xticklabels(["1", "15", "31", "61", "121", "201"]); a.minorticks_off()
-    a.set_xlabel("Trailing smoothing window w (log scale)"); a.set_ylabel("MCC, 16 two class folds")
+    a.set_xlabel("Trailing smoothing window w (log scale)"); a.set_ylabel("MCC, 16 two-class folds")
     a.legend(fontsize=6.5, frameon=False, ncol=3, loc="lower left"); a.grid(**GRID); a.set_axisbelow(True); tag(a, "(a)", -0.13)
     cfg = [("time", "Elapsed time"), ("tel", "Telemetry"), ("tel_time", "Telemetry + time"), ("primary", "Primary (76)"),
            ("full", "Full (99)")]
@@ -219,7 +219,7 @@ if "5" in which:
             xx = j * 6 + i
             a.bar(xx, mu, color=shade[i], width=0.86, label=lab if j == 0 else None, edgecolor="white", linewidth=0.6)
             a.errorbar(xx, mu, yerr=ci, fmt="none", ecolor="#0b0b0b", elinewidth=0.7, capsize=1.5)
-    a.set_xticks([2, 8, 14]); a.set_xticklabels(["RF", "GB", "LR"]); a.set_ylabel("MCC, 16 two class folds")
+    a.set_xticks([2, 8, 14]); a.set_xticklabels(["RF", "GB", "LR"]); a.set_ylabel("MCC, 16 two-class folds")
     a.grid(axis="y", **GRID); a.set_axisbelow(True); a.set_ylim(0, 0.85)
     a.legend(fontsize=6.3, frameon=False, ncol=3, loc="upper center"); tag(a, "(b)", -0.13)
     fig.tight_layout(w_pad=1.6); fig.savefig(OUT / "fig5_temporal.png", bbox_inches="tight", pad_inches=0.03)
@@ -230,7 +230,7 @@ if "6" in which:
     LA = pd.read_csv(TABLES / "T_lpgo_atime.csv").set_index("model"); CT = pd.read_csv(TABLES / "T_controls.csv")
     fig, ax = plt.subplots(1, 3, figsize=(7.2, 2.7), gridspec_kw={"width_ratios": [0.9, 1.0, 1.0]})
     a = ax[0]; NEG = ["Clock", "RF time only", "GB time only"]
-    labs = ["Clock\n(LR, time)", "RF,\ntime only", "GB,\ntime only"]
+    labs = ["Clock\n(LR, time)", "RF,\ntime-only", "GB,\ntime-only"]
     for i, m in enumerate(NEG):
         r = LA.loc[m]
         a.errorbar(i - 0.12, r.d_pooled, yerr=[[r.d_pooled - r.d_pooled_lo], [r.d_pooled_hi - r.d_pooled]], fmt="o",

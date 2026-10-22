@@ -15,7 +15,7 @@
 Usage: python pipeline/40_verify.py [--tol 1e-9] [--skip-tables]
 Exit status 0 when every check passes."""
 import sys, pathlib; sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "src"))
-import argparse, csv
+import argparse, csv, re
 sys.stdout.reconfigure(encoding="utf-8")     # the report prints non ASCII characters; a redirected Windows console is cp1252
 from decimal import Decimal, ROUND_HALF_UP
 import numpy as np, pandas as pd
@@ -71,7 +71,8 @@ if OUTPUTS != (ROOT / "outputs").resolve():
 print("\n== 2. regenerated paper tables against the printed tables (reference/paper_tables)")
 
 
-def norm(s): return " ".join(str(s).replace("−", "-").replace("−", "-").split())
+def norm(s):   # hyphens between letters are style (compound modifiers), not content
+    return " ".join(re.sub(r"(?<=[A-Za-z])-(?=[A-Za-z])", " ", str(s).replace("−", "-").replace("−", "-")).split())
 
 
 for ref in sorted((REFERENCE / "paper_tables").glob("Table_*.csv")):

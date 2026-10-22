@@ -29,7 +29,9 @@ def f3(x):
     return "" if x is None or (isinstance(x, float) and np.isnan(x)) else f"{x:.3f}".replace("-", "−")
 def s3(x): return "0.000" if abs(x) < 0.0005 else ("+" if x >= 0 else "−") + f"{abs(x):.3f}"
 def ci(lo, hi): return f"[{f3(lo)}, {f3(hi)}]"
-def pc(x): return f"{100 * x:.0f}%"
+def pc(x):   # half up, as the main tables (pipeline/31_paper_tables.py): 0.105 prints as 11%, not 10%
+    from decimal import Decimal, ROUND_HALF_UP
+    return f"{Decimal(str(round(100 * x, 6))).quantize(Decimal('1'), ROUND_HALF_UP)}%"
 
 
 def si_tables():
@@ -188,7 +190,7 @@ def si_tables():
     _add("TABLE S15", "Randomization tests and null thresholds for the time matched advantage of the real detectors: LPGO time matched AUC minus "
                    "elapsed time against refitted randomization nulls and one feature null thresholds",
          ["Detector", "Observed, primary fits [bootstrap CI]", "Observed, refit", "Replicates", "Null mean", "Null 97.5%",
-          "p [Monte Carlo 95% CI]", "BH p", "p between", "p within", "p, all features reassigned",
+          "p [Monte Carlo 95% CI]", "Adjusted p (BH)", "Between-group p", "Within-group p", "p, all features reassigned",
           "One feature thresholds (trait / state)"], rows,
          "Exploratory test (within game randomization): in each replicate the 65 feature trajectories that are neither elapsed "
          "time, a condition indicator nor a field of view mean (63 telemetry features and the two cumulative exposure "
@@ -196,18 +198,21 @@ def si_tables():
          "receives the first windows of a randomly drawn long recording of its game (a 302 window donor given to a 303 "
          "window recording repeats its last row); the donor keeps its own place, so its trajectory occurs twice in the "
          "replicate; elapsed time, the condition indicators and the field of view stay the recording's own. The scheme is "
-         "not an exact permutation for the shorter recordings, and the calibration of the p values is not established. Each detector is refitted under LOGO and LPGO with the hyperparameters of the panel; RF+GB "
+         "not an exact permutation for the shorter recordings; its level, measured with the control detector on pure noise "
+         "data, is close to the nominal 5% (Section V-D of the main text; Table S18), and its calibration for the 76 feature "
+         "learners is not established. Each detector is refitted under LOGO and LPGO with the hyperparameters of the panel; RF+GB "
          "averages the RF and GB of the same replicate. Observed, refit: the same code with the identity assignment, in "
          "the environment of the null replicates. Replicates are added until 10 reach the observed value (p = 10 / "
          "replicates) or 200 are run (p = (1 + k) / 201), following Besag and Clifford; Monte Carlo 95% CI: Clopper "
          "Pearson interval of the exceedance share. BH: Benjamini and Hochberg over the five detectors; the test is one sided "
-         "at the 5% level. p between, p within: the same replicates for the two parts; these ten values are descriptive, "
-         "unadjusted and outside the adjusted family. p, all features reassigned: a coarser variant in which all 76 "
+         "at the 5% level. Between-group p, within-group p: the same replicates for the two parts; these ten "
+         "values are descriptive, unadjusted and outside the adjusted family. Table III of the main text reports the same "
+         "run of this test, with identical adjusted values. p, all features reassigned: a coarser variant in which all 76 "
          "features are reassigned between recordings of both games (40 replicates, RF and GB only; null means "
          + ", ".join(f"{l} {f3(PN.loc[l, 'null_mean'])}" for l in PN.index) + "). One feature thresholds: 97.5th "
          "percentile of the null replicates of the controls run with the detector's own learner on elapsed time and one "
          "synthetic feature (Table S13); they do not apply to detectors with 76 features and are shown for comparison.",
-         widths=[700, 1500, 700, 700, 700, 700, 1300, 600, 650, 650, 800, 1000])
+         widths=[700, 1250, 800, 850, 600, 650, 1150, 750, 750, 700, 850, 950])
 
     # S16 onset timing within recordings (step 60)
     ON = pd.read_csv(TAB / "T_rev_onset.csv").set_index("model"); OP = pd.read_csv(TAB / "T_rev_onset_paired.csv").set_index("model")
@@ -271,9 +276,18 @@ def si_tables():
         tv = TV[TV.variant == v].set_index("model")
         rows += [[lab, m, f3(tv.loc[m, "mcc"]), f3(tv.loc["Clock", "mcc"]), s3(tv.loc[m, "d"]) + " " + ci(tv.loc[m, "lo"], tv.loc[m, "hi"]),
                   f"{tv.loc[m, 'p_w']:.3f}", f"{int(tv.loc[m, 'n'])} groups"] for m in SUP]
+    SPL = pd.read_csv(TAB / "T_rev_spline_clock.csv").set_index("model")
+    rows += [["Spline clock as reference", m, f3(r.mcc), f3(r.ref_mcc), s3(r.d) + " " + ci(r.lo, r.hi), f"{r.p_w:.3f}",
+              f"{int(r.n)} groups"] for m, r in SPL.iterrows()]
+    OCT = pd.read_csv(TAB / "T_rev_october.csv")
+    for sub, lab, unit in (("december position-free (LOGO)", "Position-free detectors, merged file (LOGO)", "groups"),
+                           ("all", "Position-free detectors, unmerged sessions", "profiles"),
+                           ("new profiles", "Position-free detectors, unmerged sessions in new profiles", "profiles")):
+        rows += [[lab, r.model, f3(r.mcc), f3(r.clock), s3(r.d) + " " + ci(r.lo, r.hi), f"{r.p_w:.3f}", f"{int(r.two_class)} {unit}"]
+                 for r in OCT[OCT.subset == sub].itertuples()]
     tvt = TV[TV.variant == "tau"].set_index("model"); tvw = TV[TV.variant == "w and tau"].set_index("model")
     l2 = L2.iloc[0]
-    _add("TABLE S22", "Label threshold check, label persistence rules, merged grouping, validated smoothing window, seeds, per recording scoring and validated threshold: MCC",
+    _add("TABLE S22", "Label threshold check, label persistence rules, merged grouping, smoothing window chosen on validation groups, seeds, per recording scoring, threshold chosen on validation groups and a spline clock: MCC",
          ["Analysis", "Model", "Fold mean MCC", "Reference", "Difference [95% CI]", "Wilcoxon p", "Two class units"], rows,
          f"Label at severity 2 or more: detectors and the clock refitted under LOGO on the binary label s ≥ 2 ({int(l2.episodes)} "
          f"positive episodes in {int(l2.recordings)} recordings); reference: the clock on this label; paired t interval and "
@@ -298,7 +312,18 @@ def si_tables():
          "clock get their own chosen rule; reference: the clock with its own chosen rule (pooled alarm rate "
          f"{tvt.loc['Clock', 'alarm']:.3f} and {tvw.loc['Clock', 'alarm']:.3f}; its chosen threshold is 0.3 in the median fold). Paired t interval and Wilcoxon "
          f"test over the 16 folds; smallest p adjusted over the five detectors {tvt.p_w_bh.min():.3f} and {tvw.p_w_bh.min():.3f}. Both analyses were "
-         "added after the primary analysis from saved predictions; no model was refitted, and the primary rule is unchanged.",
+         "added after the primary analysis from saved predictions; no model was refitted, and the primary rule is unchanged. "
+         "Position-free detectors: the 76 primary features minus the 21 computed from player position (55 features), "
+         "with the learners, hyperparameters and rule of the primary analysis, added after the primary analysis. Merged file: LOGO; "
+         "reference: the clock of the primary analysis. Unmerged sessions: the 25 raw-archive sessions with at least 250 windows "
+         "that are not in the merged file, scored by models fitted once on all 35 merged recordings and grouped by descriptor "
+         "profile; reference: the clock fitted on the merged recordings; new profiles: the sessions whose descriptor profile does "
+         "not occur in the merged file. Paired t interval and Wilcoxon test over the two class units, unadjusted. "
+         "Spline clock as reference: a class balanced logistic regression on a cubic spline basis of elapsed time (five knots set "
+         "before fitting, linear extrapolation), fitted under LOGO with the scaling and rule of the primary analysis and "
+         f"added after the primary analysis (fold mean MCC {f3(SPL.loc['Clock', 'ref_mcc'])}, alarm rate {f3(SPL.ref_alarm.iloc[0])} averaged over the 16 folds); "
+         "paired t interval and Wilcoxon test over the 16 folds, unadjusted; adjusted over the five detectors, "
+         f"LR {f3(SPL.loc['LR', 'p_w_bh5'])} and MLP {f3(SPL.loc['MLP', 'p_w_bh5'])}.",
          widths=[2400, 2300, 1000, 900, 1700, 900, 1100])
 
     # S23 influence of single groups on the time matched advantage (step 61)
@@ -353,16 +378,38 @@ def si_tables():
     # S26 detection rates of the trait control of the main text with their uncertainty (step 61)
     CC = pd.read_csv(TAB / "T_rev_control_ci.csv"); TCL = pd.read_csv(TAB / "T_controls.csv")
     thr_state = TCL[(TCL.kind == "state") & (TCL.delta == 0)].t_cal.iloc[0]
-    rows = [[f"{r.delta:g}", f"{int(r.reps)}", s3(r.mean_dl), f"{pc(r.power_boot)} [{pc(r.boot_lo)}, {pc(r.boot_hi)}]",
+    rows = [[f"LR control, {r.delta:g}", f"{int(r.reps)}", s3(r.mean_dl), f"{pc(r.power_boot)} [{pc(r.boot_lo)}, {pc(r.boot_hi)}]",
              f"{pc(r.power_cal)} [{pc(r.cal_lo)}, {pc(r.cal_hi)}]"] for r in CC.itertuples()]
-    _add("TABLE S26", "Detection rates of the trait control with 95% intervals (control detector of Table VI, 200 replicates per row)",
-         ["δ", "Replicates", "Mean ΔAtime LPGO", "Detected, bootstrap rule [95% CI]", "Detected, null threshold [95% CI]"], rows,
+    # the same trait signal added to the 76 features of the real RF and GB (step 65), exact binomial intervals
+    from scipy.stats import binomtest
+    CF = pd.read_csv(TAB / "T_rev_controls_full.csv")
+
+    def cp(p, n):
+        k = int(round(p * n)); c = binomtest(k, n).proportion_ci(method="exact"); return f"{pc(k / n)} [{pc(c.low)}, {pc(c.high)}]"
+    rows += [[f"{r.learner} with 76 features, {r.delta:g}", f"{int(r.reps)}", s3(r.dl), cp(r.power_lpo, int(r.reps)),
+              "reference" if r.delta == 0 else cp(r.power_cal_lpo, int(r.reps))] for r in CF[CF.kind == "trait"].itertuples()]
+    cft = CF[CF.kind == "trait"].set_index(["learner", "delta"])
+    ft = {(r.learner, r.delta): pc(round(r.power_t * r.reps) / r.reps) for r in CF[CF.kind == "trait"].itertuples()}
+    lt = TCL[(TCL.learner == "LR") & (TCL.kind == "trait") & (TCL.delta > 0)].power_t
+    _add("TABLE S26", "Detection rates of the trait control with 95% intervals (control detector of Table VI, 200 replicates per row, "
+         "and the real RF and GB with the signal added to their 76 features, 20 or 30 replicates per row)",
+         ["Detector, δ", "Replicates", "Mean ΔAtime LPGO", "Detected, bootstrap rule [95% CI]", "Detected, null threshold [95% CI]"], rows,
          f"Null thresholds: 97.5th percentile of the LPGO difference in the 200 replicates without a signal, {f3(CC.threshold.iloc[0])} "
          f"for the trait signal and {f3(thr_state)} for the state signal. Intervals: the replicates with a signal and, for "
          "the null threshold, the replicates without a signal are resampled with replacement 10,000 times; the threshold "
          "and the detection rate are recomputed in every draw, so the interval of the null threshold column includes the "
          "uncertainty of the threshold. The null threshold is a one sided 2.5% criterion; the randomization test of the "
-         "real detectors is one sided at 5%.", widths=[900, 1200, 1800, 2800, 2900])
+         "real detectors is one sided at 5%. RF and GB with 76 features: the trait signal is added as a 77th feature and both "
+         "detectors are refitted under LOGO and LPGO with the hyperparameters, rule and statistics of the primary analysis "
+         "(added after the primary analysis). The 76 real features are the same in every replicate, so the "
+         "replicates without a signal measure how much each real detector varies with the noise of z; their 97.5th "
+         f"percentile is the null threshold for an added signal (GB {f3(cft.loc[('GB', 0.0), 'thr_lpo'])}, RF "
+         f"{f3(cft.loc[('RF', 0.0), 'thr_lpo'])}), and the rows without a signal are the reference for it; exact binomial "
+         "intervals. Fold MCC, with the same construction on the difference from the clock: GB "
+         f"{pc(cft.loc[('GB', 1.5), 'power_cal_mcc'])} and {pc(cft.loc[('GB', 3.0), 'power_cal_mcc'])} at δ = 1.5 and 3, RF "
+         f"{pc(cft.loc[('RF', 1.5), 'power_cal_mcc'])} at δ = 1.5; with the paired t test rule (p < 0.05 and a positive "
+         f"difference) LR control at most {pc(lt.max())}, GB {ft[('GB', 1.5)]} and {ft[('GB', 3.0)]}, RF {ft[('RF', 1.5)]}.",
+         widths=[1900, 1000, 1500, 2600, 2600])
 
     # S18 inventory of the interval estimates and tests of the analyses added after the primary analysis
     inv = []
@@ -389,11 +436,30 @@ def si_tables():
     exr = [r.model for r in RC_.itertuples() if r.lo > 0 or r.hi < 0]
     inv.append(["Per recording scoring (Table S22)", str(2 * len(RC_)), str(len(exr)),
                 ("; ".join(exr) if exr else "none") + " (intervals for the five means over groups only)", "sensitivity"])
-    fam("Validated threshold (Table S22)", [(f"{r.model} {r.variant}", r.lo, r.hi) for r in TV_.itertuples()], "sensitivity")
+    fam("Threshold chosen on validation groups (Table S22)", [(f"{r.model} {r.variant}", r.lo, r.hi) for r in TV_.itertuples()], "sensitivity")
+    SPL_ = pd.read_csv(TAB / "T_rev_spline_clock.csv")
+    fam("Spline clock as reference (Table S22)", [(r.model, r.lo, r.hi) for r in SPL_.itertuples()], "sensitivity")
+    OCT_ = pd.read_csv(TAB / "T_rev_october.csv")
+    fam("Position-free detectors and unmerged sessions (Table S22)",
+        [(f"{r.model}, {r.subset}, fold MCC", r.lo, r.hi) for r in OCT_.itertuples()]
+        + [(f"{r.model}, {r.subset}, time matched AUC", r.dtm_lo, r.dtm_hi) for r in OCT_[OCT_.subset != "december position-free (LOGO)"].itertuples()],
+        "replication on other recording days")
+    HZ = pd.read_csv(TAB / "T_rev_hazard.csv").dropna(subset=["lo"])
+    fam("Hazard of the first report (Section V-E of the main text)", [(r.model, r.lo, r.hi) for r in HZ.itertuples()], "sensitivity")
+    PSC = pd.read_csv(TAB / "T_rev_proper_scores.csv")
+    fam("Proper scores against the clock (Section V-C of the main text)",
+        [(f"{r.model} {'Brier score' if r.score == 'brier' else 'log loss'}", r.lo, r.hi) for r in PSC.itertuples()],
+        "sensitivity")
     inv.append(["Influence of single groups (Table S23)", str(len(SUP) * len(one)), "not applicable", "no interval or test", "descriptive"])
     inv.append(["Controls with the detectors' own learners (Table S13)", str(len(C)), "not applicable",
                 "detection rates on synthetic signals", "check of what the protocol detects"])
+    inv.append(["Controls inside the real detectors (Table S26)", str(len(CF)), "not applicable",
+                "detection rates on a synthetic signal added to the 76 features", "check of what the protocol detects"])
     sig = list(PS_.index[PS_.p_perm_bh < 0.05])
+    LV = pd.read_csv(TAB / "T_rev_perm_level.csv"); lv = LV[LV.alpha == 0.05].set_index(["kind", "statistic"]).level
+    inv.append(["Level of the randomization test on null data (Section V-D of the main text)", str(len(lv)), "not applicable",
+                f"rejections at 5%: time matched AUC {pc(lv[('trait', 'time-matched AUC')])} and {pc(lv[('state_ar', 'time-matched AUC')])}, "
+                f"fold MCC {pc(lv[('trait', 'fold MCC')])} and {pc(lv[('state_ar', 'fold MCC')])}", "check of the test"])
     inv.append(["Within game randomization test (Table S15)", "5", str(len(sig)), ", ".join(sig) or "none",
                 "exploratory, BH over the five detectors"])
     part = [f"{m} {pt}" for m in SUP for pt in ("between", "within") if PS_.loc[m, f"p_perm_{pt}"] < 0.05]

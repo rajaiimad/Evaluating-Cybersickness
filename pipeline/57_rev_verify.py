@@ -39,7 +39,8 @@ def paras(path):
 
 
 MS = paras(WORK / "Cybersickness_IEEE_R1.docx"); SI = paras(WORK / "Cybersickness_supporting_information_R1.docx")
-TEXT = "\n".join(MS + SI); norm = lambda s: s.replace("−", "-").replace("–", "-")
+TEXT = "\n".join(MS + SI)
+norm = lambda s: re.sub(r"(?<=[A-Za-z])-(?=[A-Za-z])", " ", s.replace("−", "-").replace("–", "-"))   # compound modifier hyphens are style
 NT = norm(TEXT)
 
 # 1. original quoted numbers
@@ -74,12 +75,17 @@ if NS["CTL"] is not None:
     NS["ctl"] = lambda l, k, d: NS["CTL"][(NS["CTL"].learner == l) & (NS["CTL"].kind == k) & ((NS["CTL"].delta - d).abs() < 1e-9)].iloc[0]
 NS["pc0"] = lambda x: f"{100 * x:.0f}%"
 NS["PN"] = T("T_rev_perm_null", "learner")
+NS["oc"] = lambda sub: NS["OCT"][NS["OCT"].subset == sub].set_index("model")
+NS["lv"] = lambda k, st: NS["LV"][(NS["LV"].kind == k) & (NS["LV"].statistic == st) & (NS["LV"].alpha == 0.05)].iloc[0]
+NS["ci3"] = lambda lo, hi: f"[{lo:.3f}, {hi:.3f}]"
+NS["cf"] = lambda l, d_: NS["CF"][(NS["CF"].learner == l) & (NS["CF"].kind == "trait") & (NS["CF"].delta == d_)].iloc[0]
 NS.update(PS=T("T_rev_perm_strat", "learner"), ON=T("T_rev_onset"), OP=T("T_rev_onset_paired"), DS=T("T_rev_dose"),
           DC=T("T_rev_dose_contrast", "contrast"), L2=T("T_rev_label2"), TC=T("T_controls", None), LPA=T("T_lpgo_atime"),
           INF=pd.read_csv(TABLES / "T_rev_influence.csv", dtype={"group": str}).set_index("group"),
           CCI=T("T_rev_control_ci", "delta"), PR=T("T_primary"), O99=T("T_original99"),
           JSE=T("T_rev_influence_se"), TG=T("T_rev_tau_grid", None), RC=T("T_rev_recording"), TV=T("T_rev_tau_val", None),
-          SVT=T("T_severity"), TR=["RF", "GB", "RF+GB"], LOR=T("T_loro"))
+          SVT=T("T_severity"), TR=["RF", "GB", "RF+GB"], LOR=T("T_loro"),
+          RAW=T("T_rev_raw_unused_facts", "name").value, SPL=T("T_rev_spline_clock"), CF=T("T_rev_controls_full", None), PSC=T("T_rev_proper_scores", None), OCT=T("T_rev_october", None), OF=T("T_rev_october_facts", "name").value, HZ=T("T_rev_hazard"), LV=T("T_rev_perm_level", None))
 ok_n, bad = 0, []
 ROWS = list(csv.DictReader(open(REFERENCE / "paper_numbers_revision.csv", encoding="utf-8")))
 if FILL:                                    # write the printed form of every expression (run once after a rebuild)
@@ -87,6 +93,7 @@ if FILL:                                    # write the printed form of every ex
     with open(REFERENCE / "paper_numbers_revision.csv", "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=["id", "location", "printed", "expr"]); w.writeheader(); w.writerows(ROWS)
 for r in ROWS:
+    if r["id"] in removed: continue                     # moved out of the text, reason in paper_numbers_removed.csv
     try:
         got = str(eval(r["expr"], NS))
     except Exception as e:
@@ -100,9 +107,9 @@ sys.path.insert(0, str(ROOT / "src"))
 from csp.si_revision import SI_ORDER as SI_ORDER_N
 # 3. consistency of the revised manuscript
 caps = [int(m.group(1)) for p in MS for m in [re.match(r"Fig\. (\d)\.\s", p)] if m]
-report(caps == [1, 2, 3, 4], f"figure captions in order {caps}")
+report(caps == [1, 2, 3, 4, 5], f"figure captions in order {caps}")
 refs_fig = [int(x) for p in MS if not re.match(r"Fig\. \d\.\s", p) for x in re.findall(r"Fig\. (\d)", p)]
-report(all(1 <= x <= 4 for x in refs_fig) and set(refs_fig) == {1, 2, 3, 4}, f"figure references in range ({len(refs_fig)})")
+report(all(1 <= x <= 5 for x in refs_fig) and set(refs_fig) == {1, 2, 3, 4, 5}, f"figure references in range ({len(refs_fig)})")
 k = MS.index("References"); body = "\n".join(MS[:k]); rl = [p for p in MS[k + 1:] if re.match(r"\[\d+\]", p)]
 nums = [int(re.match(r"\[(\d+)\]", p).group(1)) for p in rl]
 report(nums == list(range(1, len(nums) + 1)), f"reference list numbered 1..{len(nums)}")
@@ -142,6 +149,36 @@ for p_ in MS[:k]:
 report(first == [f"S{i + 1}" for i in range(len(SI_ORDER))], f"SI tables first cited in printed order ({len(first)})")
 si_labels = [int(m.group(1)) for p_ in SI for m in [re.fullmatch(r"TABLE S(\d+)", p_.strip())] if m]
 report(si_labels == list(range(1, len(SI_ORDER) + 1)), "SI tables printed in numeric order")
+
+# 6. the randomization test: Table III and Table S9 print the same p and adjusted p, and both equal the saved output
+def table_with(path, header):
+    for t in docx.Document(str(path)).tables:
+        h = [c.text.strip() for c in t.rows[0].cells]
+        if header in h: return h, [[c.text.strip() for c in r.cells] for r in t.rows[1:]]
+    return None, []
+
+
+PS_ = NS["PS"]; o_ = PS_.p_perm.sort_values()
+bh = (o_ * len(o_) / np.arange(1, len(o_) + 1))[::-1].cummin()[::-1].clip(upper=1)   # Benjamini–Hochberg
+h3, r3 = table_with(WORK / "Cybersickness_IEEE_R1.docx", "Randomization p (BH)")
+h9, r9 = table_with(WORK / "Cybersickness_supporting_information_R1.docx", "Adjusted p (BH)")
+bad_r = []
+if h3 and h9:
+    t3 = {r[0]: re.match(r"([\d.]+) \(([\d.]+)\)", r[h3.index("Randomization p (BH)")]).groups() for r in r3}
+    t9 = {r[0]: (r[h9.index("p [Monte Carlo 95% CI]")].split(" ")[0], r[h9.index("Adjusted p (BH)")]) for r in r9}
+    for d in DET:
+        want = (f3(PS_.loc[d, "p_perm"]), f3(bh[d]))
+        if not (t3.get(d) == t9.get(d) == want): bad_r.append(f"{d}: Table III {t3.get(d)}, Table S9 {t9.get(d)}, output {want}")
+    if not np.allclose(bh[DET], PS_.loc[DET, "p_perm_bh"]): bad_r.append("BH recomputed from p_perm differs from p_perm_bh")
+report(bool(h3 and h9) and not bad_r, "randomization p and BH p identical in Table III, Table S9 and T_rev_perm_strat"
+       + ("" if h3 and h9 else ": table not found") + ("" if not bad_r else ": " + "; ".join(bad_r)))
+# wording: analyses with a rule chosen on validation groups are sensitivity analyses, not a validated rule
+for bad_s in ["validated rule", "validated threshold", "Validated threshold", "validated-threshold", "validated smoothing"]:
+    report(bad_s not in TEXT, f"no '{bad_s}'")
+# participant independence is never claimed, only denied
+pi = [TEXT[max(0, m.start() - 60):m.end()] for m in re.finditer(r"participant[- ]independen", TEXT, re.I)
+      if not re.search(r"(?:\bnot|rather than)(?:\s+[A-Za-z]+){0,3}\s+$", TEXT[max(0, m.start() - 60):m.start()])]   # negation governs the phrase
+report(not pi, "participant independence appears only as a negated claim" + ("" if not pi else ": " + "; ".join(pi)))
 
 # 5. response letter claims
 LET = WORK / "Response_to_reviewers_R1.md"

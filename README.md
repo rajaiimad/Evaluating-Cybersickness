@@ -185,9 +185,10 @@ table below uses the printed numbers of the final documents. All files are under
 | Table IV | Positive and negative controls | 16 | `T_controls.csv` (replicates: `CTRL_LR.csv`) |
 | Table V | Reporting checklist | text, no computation | |
 | Fig. 1 | Protocol | 30 | `figures/fig1_protocol.png` |
-| Fig. 2 | Random splitting against group disjoint evaluation | 11; 20, 24, 30 | `T_leakage.csv`, `T_leakage_loro.csv`; `figures/fig2_leakage.png` |
-| Fig. 3 | Primary comparison | 20, 25, 30 | `figures/fig3_primary.png` |
-| Fig. 4 | Controls | 16, 25, 30 | `figures/fig6_controls.png` |
+| Fig. 2 | Schematic of the time matched comparison and LPGO scoring | drawn by the authors; numbers from `T_rev_tm_coverage.csv`, `T_lpgo_atime.csv` | `figures/fig2_time_matched_scheme.svg` |
+| Fig. 3 | Random splitting against group disjoint evaluation | 11; 20, 24, 30 | `T_leakage.csv`, `T_leakage_loro.csv`; `figures/fig2_leakage.png` |
+| Fig. 4 | Primary comparison | 20, 25, 30 | `figures/fig3_primary.png` |
+| Fig. 5 | Controls | 16, 25, 30 | `figures/fig6_controls.png` |
 
 ### Supporting Information
 

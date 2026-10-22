@@ -24,7 +24,7 @@ def write(name, rows):
         csv.writer(f).writerows(rows)
 
 
-ms = docx.Document(sys.argv[1]).tables
+ms = [t for t in docx.Document(sys.argv[1]).tables if len(t.rows) > 1]     # one row tables are author biographies
 assert len(ms) == 5, len(ms)
 # main text tables I to IV with their number of header rows; Table V (checklist) carries no result
 for name, (i, nh) in {"I": (0, 1), "II": (1, 2), "III": (2, 1), "IV": (3, 2)}.items():
