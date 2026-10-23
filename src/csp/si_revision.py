@@ -345,21 +345,29 @@ def si_tables():
          "group produces the point advantage, not that the advantage is established.",
          widths=[1900, 1000, 1000, 1100] + [920] * 5)
 
-    # S24 diagnostics of the null replicates of the randomization test (step 59)
+    # S24 diagnostics of the null replicates of the randomization test (step 59); fold MCC on a fixed budget of 200
+    # replicates per detector (audit/perm_mcc/verify_fixed200.py), not on the replicates of the time matched stopping rule
+    FX = pd.read_csv(TAB / "T_audit_perm_mcc_fixed200.csv").set_index("learner")
     rows = [[m, f"{int(r.reps)}", f3(r.null_q95), f3(r.null_q975), s3(r.observed),
              f"{int(r.null_above_k)} of {int(r.reps)} ({100 * r.null_above:.1f}%)",
-             f"{int(r.null_below_k)} of {int(r.reps)} ({100 * r.null_below:.1f}%)", s3(r.observed_dmcc), s3(r.null_dmcc_mean),
-             f"{r.p_perm_mcc:.3f}"] for m, r in PS_.loc[SUP].iterrows()]
+             f"{int(r.null_below_k)} of {int(r.reps)} ({100 * r.null_below:.1f}%)", s3(r.observed_dmcc),
+             s3(FX.loc[m, "null_mean"]), f"{FX.loc[m, 'p']:.3f}"] for m, r in PS_.loc[SUP].iterrows()]
+    assert all(abs(FX.loc[m, "observed"] - PS_.loc[m, "observed_dmcc"]) < 1e-12 and int(FX.loc[m, "B"]) == 200 for m in SUP)
     _add("TABLE S24", "Null replicates of the within game randomization test: critical values, coverage of the group bootstrap and fold MCC",
-         ["Detector", "Replicates", "Null 95%", "Null 97.5%", "Observed, refit", "Bootstrap CI above zero", "Bootstrap CI below zero",
-          "Observed ΔMCC", "Null mean ΔMCC", "p, fold MCC"], rows,
-         "Replicates of Table S15. Null 95%, 97.5%: percentiles of the LPGO time matched AUC minus elapsed time in the "
+         ["Detector", "Replicates for time matched AUC", "Null 95%", "Null 97.5%", "Observed, refit", "Bootstrap CI above zero",
+          "Bootstrap CI below zero", "Observed ΔMCC", "Null mean ΔMCC (200 replicates)", "p, fold MCC (200 replicates)"], rows,
+         "Replicates for time matched AUC: replicates of Table S15, set by its stopping rule; they apply to the columns up to "
+         "Bootstrap CI below zero. The fold MCC columns use 200 replicates for every detector. Null 95%, 97.5%: percentiles of the LPGO time matched AUC minus elapsed time in the "
          "null replicates; the 95th percentile is the unadjusted critical value of the one sided test at the 5% level. "
          "With the sequential rule the percentiles of LR and the MLP rest on few replicates. Bootstrap CI above (below) "
          "zero: null replicates whose 95% group bootstrap interval lies wholly above (below) zero, 2.5% expected on each "
          "side if the bootstrap were calibrated. ΔMCC: fold MCC minus the clock, observed (refit) and mean of the null "
-         "replicates; p, fold MCC: share of null replicates that reach the observed value, a check that the telemetry "
-         "is related to the labels and not a test of information beyond time.",
+         "replicates. Null mean ΔMCC and p, fold MCC: a fixed budget of 200 replicates per detector (replicates 0 to "
+         "199 of the same null), not the replicate count of the time matched stopping rule; p = (1 + k)/201, with k the "
+         "null replicates that reach the observed value and ties counted as reaching it (k = "
+         + ", ".join(f"{int(FX.loc[m, 'exceed'])} for {m}" for m in SUP) + "). With the replicates of the stopping rule "
+         "the values were " + ", ".join(f"{m} {PS_.loc[m, 'p_perm_mcc']:.3f}" for m in SUP) + ". The fold MCC p is a "
+         "check that the telemetry is related to the labels, not a test of an advantage over the clock.",
          widths=[800, 900, 800, 800, 900, 1500, 1500, 900, 900, 800])
 
     # S25 time only negative controls, pooled against LPGO scoring (step 25)
@@ -462,6 +470,10 @@ def si_tables():
                 f"fold MCC {pc(lv[('trait', 'fold MCC')])} and {pc(lv[('state_ar', 'fold MCC')])}", "check of the test"])
     inv.append(["Within game randomization test (Table S15)", "5", str(len(sig)), ", ".join(sig) or "none",
                 "exploratory, BH over the five detectors"])
+    FX = pd.read_csv(TAB / "T_audit_perm_mcc_fixed200.csv").set_index("learner"); fsig = list(FX.index[FX.p_bh < 0.05])
+    inv.append(["Fold MCC randomization test with a fixed budget of 200 replicates per detector (added after the primary "
+                "analysis)", "5", str(len(fsig)), ", ".join(fsig) or "none",
+                "exploratory, BH over the five detectors; association of telemetry with labels, not an advantage over the clock"])
     part = [f"{m} {pt}" for m in SUP for pt in ("between", "within") if PS_.loc[m, f"p_perm_{pt}"] < 0.05]
     inv.append(["Parts of the randomization test (Table S15)", "10", str(len(part)),
                 ("unadjusted p < 0.05: " + ", ".join(part)) if part else "none", "descriptive, unadjusted"])

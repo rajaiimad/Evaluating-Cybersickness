@@ -1,0 +1,15 @@
+C1. The simulated rule on the saved step 59 replicates
+  RF     n 200 (reported 200, mc_p 200); p dl 0.0448 (reported 0.0448); p fold MCC 0.0050 (reported 0.0050): identical
+  GB     n 86 (reported 86, mc_p 86); p dl 0.1163 (reported 0.1163); p fold MCC 0.0115 (reported 0.0115): identical
+  RF+GB  n 163 (reported 163, mc_p 163); p dl 0.0613 (reported 0.0613); p fold MCC 0.0061 (reported 0.0061): identical
+  LR     n 22 (reported 22, mc_p 22); p dl 0.4545 (reported 0.4545); p fold MCC 0.9130 (reported 0.9130): identical
+  MLP    n 59 (reported 59, mc_p 59); p dl 0.1695 (reported 0.1695); p fold MCC 0.2000 (reported 0.2000): identical
+C2. Exact null drawn from each learner's empirical joint null distribution of (dl, dmcc)
+  RF     (200 pairs, corr +0.68): P(p<=0.01) = 0.0073 [0.0068, 0.0079]; P(p<=0.05) = 0.0425 [0.0412, 0.0437]; P(p<=0.10) = 0.0887 [0.0870, 0.0905]; mean n = 39.1
+  GB     (200 pairs, corr +0.70): P(p<=0.01) = 0.0027 [0.0024, 0.0030]; P(p<=0.05) = 0.0406 [0.0394, 0.0419]; P(p<=0.10) = 0.0877 [0.0859, 0.0894]; mean n = 39.2
+  RF+GB  (200 pairs, corr +0.71): P(p<=0.01) = 0.0035 [0.0031, 0.0038]; P(p<=0.05) = 0.0390 [0.0378, 0.0402]; P(p<=0.10) = 0.0846 [0.0829, 0.0863]; mean n = 38.8
+  LR     (29 pairs, corr +0.69): P(p<=0.01) = 0.0003 [0.0002, 0.0004]; P(p<=0.05) = 0.0254 [0.0245, 0.0264]; P(p<=0.10) = 0.0724 [0.0708, 0.0741]; mean n = 36.5
+  MLP    (60 pairs, corr +0.43): P(p<=0.01) = 0.0022 [0.0020, 0.0026]; P(p<=0.05) = 0.0343 [0.0331, 0.0354]; P(p<=0.10) = 0.0787 [0.0770, 0.0804]; mean n = 37.7
+C3. Other dependence structures
+  Gaussian rho -0.5: P(p<=0.01) = 0.0000 [0.0000, 0.0001]; P(p<=0.05) = 0.0061 [0.0056, 0.0066]; P(p<=0.10) = 0.0786 [0.0770, 0.0803]; mean n = 39.7
+  t copula 3 df rho 0.7: P(p<=0.01) = 0.0079 [0.0074, 0.0085]; P(p<=0.05) = 0.0423 [0.0411, 0.0436]; P(p<=0.10) = 0.0914 [0.0896, 0.0932]; mean n = 39.6

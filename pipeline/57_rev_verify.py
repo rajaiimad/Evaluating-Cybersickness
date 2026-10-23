@@ -85,7 +85,8 @@ NS.update(PS=T("T_rev_perm_strat", "learner"), ON=T("T_rev_onset"), OP=T("T_rev_
           CCI=T("T_rev_control_ci", "delta"), PR=T("T_primary"), O99=T("T_original99"),
           JSE=T("T_rev_influence_se"), TG=T("T_rev_tau_grid", None), RC=T("T_rev_recording"), TV=T("T_rev_tau_val", None),
           SVT=T("T_severity"), TR=["RF", "GB", "RF+GB"], LOR=T("T_loro"),
-          RAW=T("T_rev_raw_unused_facts", "name").value, SPL=T("T_rev_spline_clock"), CF=T("T_rev_controls_full", None), PSC=T("T_rev_proper_scores", None), OCT=T("T_rev_october", None), OF=T("T_rev_october_facts", "name").value, HZ=T("T_rev_hazard"), LV=T("T_rev_perm_level", None))
+          RAW=T("T_rev_raw_unused_facts", "name").value, SPL=T("T_rev_spline_clock"), CF=T("T_rev_controls_full", None), PSC=T("T_rev_proper_scores", None), OCT=T("T_rev_october", None), OF=T("T_rev_october_facts", "name").value, HZ=T("T_rev_hazard"), LV=T("T_rev_perm_level", None),
+          FX=T("T_audit_perm_mcc_fixed200", "learner"))
 ok_n, bad = 0, []
 ROWS = list(csv.DictReader(open(REFERENCE / "paper_numbers_revision.csv", encoding="utf-8")))
 if FILL:                                    # write the printed form of every expression (run once after a rebuild)
